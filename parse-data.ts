@@ -2,16 +2,17 @@ import csv from "csvtojson";
 
 export type DataRow = Record<string, number>;
 
-const parseValue = (str: string): number => parseFloat(str.replace("%", ""));
+const parseValue = (str: string): number =>
+  0.01 * parseFloat(str.replace("%", ""));
 
 const normalizeDataRow = (
   dataRow: Record<string, string>,
   keys: string[]
-): DataRow => {
-  const result: DataRow = {};
-  keys.forEach((key) => (result[key] = parseValue(dataRow[key])));
-  return result;
-};
+): DataRow =>
+  keys.reduce<DataRow>((result, key) => {
+    result[key] = parseValue(dataRow[key]);
+    return result;
+  }, {});
 
 const normalizeData = (
   dataRows: Record<string, string>[],
