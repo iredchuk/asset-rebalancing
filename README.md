@@ -3,5 +3,5 @@
 ## Run
 
 ```sh
-ts-node index.ts ./data/<data-file>.csv
+npm start ./data/<data-file>.csv
 ```
