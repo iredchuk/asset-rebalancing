@@ -1,4 +1,4 @@
-import { readData } from "./app/read-data";
+import { readCsv } from "./app/file-reader";
 import { parseData } from "./app/parse-data";
 import { parsePercentValue } from "./app/value-parsers";
 import {
@@ -12,7 +12,7 @@ const main = async () => {
   console.log("Parsing CSV...");
   const keys = ["stocks", "bonds", "cash", "reit", "gold"];
   const csvFilePath = process.argv[2];
-  const dataRows = await readData(csvFilePath);
+  const dataRows = await readCsv(csvFilePath);
   const changes = parseData(dataRows, keys, parsePercentValue);
 
   console.log(changes);
