@@ -26,12 +26,15 @@ export const updatePortfolio = (
   portfolio: Portfolio,
   change: Change
 ): Portfolio =>
-  Object.entries(change).reduce<Portfolio>((result, [asset, changeValue]) => {
-    if (portfolio[asset] !== undefined) {
-      result[asset] = portfolio[asset] * (1 + changeValue);
-    }
-    return result;
-  }, {});
+  Object.entries(change).reduce<Portfolio>(
+    (result, [asset, changeValue]) => {
+      if (portfolio[asset] !== undefined) {
+        result[asset] = portfolio[asset] * (1 + changeValue);
+      }
+      return result;
+    },
+    { ...portfolio }
+  );
 
 export const rebalance = (
   portfolio: Portfolio,

@@ -5,7 +5,11 @@ const parseDataRow = (
   keys: string[],
   valueParser: (s: string) => number
 ): DataRow =>
-  keys.reduce<DataRow>((result, key) => {
+  keys.reduce<DataRow>((result, key, index) => {
+    if (!dataRow[key]) {
+      throw new Error(`Key ${key} not found in a data row at index ${index}`);
+    }
+
     result[key] = valueParser(dataRow[key].trim());
     return result;
   }, {});
