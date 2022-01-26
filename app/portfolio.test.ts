@@ -1,4 +1,5 @@
 import {
+  createAllocation,
   createPortfolio,
   getPortfolioValue,
   rebalance,
@@ -6,13 +7,42 @@ import {
 } from "./portfolio";
 
 describe("portfolio", () => {
+  describe("createAllocation", () => {
+    test("with normalized values", () => {
+      const actual = createAllocation(
+        { stocks: 0.5, bonds: 0.2, cash: 0.3 },
+        "test"
+      );
+
+      expect(actual).toEqual({
+        name: "test",
+        values: { stocks: 0.5, bonds: 0.2, cash: 0.3 },
+      });
+    });
+
+    test("with non-normalized values", () => {
+      const actual = createAllocation(
+        { stocks: 0.8, bonds: 0.5, cash: 0.7, nothing: 0 },
+        "test"
+      );
+
+      expect(actual).toEqual({
+        name: "test",
+        values: { stocks: 0.4, bonds: 0.25, cash: 0.35, nothing: 0 },
+      });
+    });
+  });
+
   describe("createPortfolio", () => {
     test("with value and allocation", () => {
-      const actual = createPortfolio(1000, {
-        gold: 0.65,
-        silver: 0.25,
-        platinum: 0.1,
-      });
+      const actual = createPortfolio(
+        1000,
+        createAllocation({
+          gold: 0.65,
+          silver: 0.25,
+          platinum: 0.1,
+        })
+      );
 
       expect(actual).toEqual({
         gold: 650,
@@ -24,11 +54,14 @@ describe("portfolio", () => {
 
   describe("getPortfolioValue", () => {
     test("equals to value portfolio created with", () => {
-      const portfolio = createPortfolio(1200, {
-        gold: 0.65,
-        silver: 0.25,
-        platinum: 0.1,
-      });
+      const portfolio = createPortfolio(
+        1200,
+        createAllocation({
+          gold: 0.65,
+          silver: 0.25,
+          platinum: 0.1,
+        })
+      );
 
       const actual = getPortfolioValue(portfolio);
 
@@ -38,11 +71,14 @@ describe("portfolio", () => {
 
   describe("updatePortfolio", () => {
     test("when all asset changes specified", () => {
-      const portfolio = createPortfolio(1000, {
-        gold: 0.5,
-        silver: 0.3,
-        platinum: 0.2,
-      });
+      const portfolio = createPortfolio(
+        1000,
+        createAllocation({
+          gold: 0.5,
+          silver: 0.3,
+          platinum: 0.2,
+        })
+      );
 
       const change = {
         gold: 0.3,
@@ -64,11 +100,14 @@ describe("portfolio", () => {
     });
 
     test("when some changes not specified and some non-related changes", () => {
-      const portfolio = createPortfolio(1000, {
-        gold: 0.5,
-        silver: 0.3,
-        platinum: 0.2,
-      });
+      const portfolio = createPortfolio(
+        1000,
+        createAllocation({
+          gold: 0.5,
+          silver: 0.3,
+          platinum: 0.2,
+        })
+      );
 
       const change = {
         gold: 0.3,
@@ -92,13 +131,20 @@ describe("portfolio", () => {
 
   describe("rebalance", () => {
     test("rebalances according to allocation", () => {
-      const portfolio = createPortfolio(1000, {
-        cash: 0.5,
-        gold: 0.3,
-        silver: 0.2,
-      });
+      const portfolio = createPortfolio(
+        1000,
+        createAllocation({
+          cash: 0.5,
+          gold: 0.3,
+          silver: 0.2,
+        })
+      );
 
-      const allocation = { cash: 0.1, gold: 0.6, silver: 0.3 };
+      const allocation = createAllocation({
+        cash: 0.1,
+        gold: 0.6,
+        silver: 0.3,
+      });
 
       const actual = rebalance(portfolio, allocation);
 

@@ -1,6 +1,7 @@
 import {
   Allocation,
   Change,
+  createAllocation,
   createPortfolio,
   getPortfolioValue,
   rebalance,
@@ -37,11 +38,17 @@ export const backTestAllocation = (
 
 type Allocations = Record<string, number[]>;
 
-const createAllocation = (allocations: Allocations, values: number[]) =>
-  Object.keys(allocations).reduce<Allocation>(
-    (result, asset, i) => ({ ...result, [asset]: values[i] }),
-    {}
-  );
+const selectAllocation = (
+  allocations: Allocations,
+  values: number[]
+): Allocation => {
+  // TODO: create valid allocation not greater than 1 in total value
+  const allocationValues = Object.keys(allocations).reduce<
+    Record<string, number>
+  >((result, asset, i) => ({ ...result, [asset]: values[i] }), {});
+
+  return createAllocation(allocationValues, JSON.stringify(allocationValues));
+};
 
 export const backTestAllocationCombinations = (
   initialValue: number,
@@ -49,14 +56,11 @@ export const backTestAllocationCombinations = (
   changes: Change[]
 ): BackTestResult => {
   let bestResult: BackTestResult = { endValue: 0, valueRatio: 0 };
-
   const combinations = Object.values(allocations);
 
   iterateOverArrays(combinations, (values) => {
-    const allocation = createAllocation(allocations, values);
-
+    const allocation = selectAllocation(allocations, values);
     const result = backTestAllocation(initialValue, allocation, changes);
-
     if (result.endValue > bestResult.endValue) {
       bestResult = result;
     }
