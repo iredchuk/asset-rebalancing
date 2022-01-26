@@ -1,18 +1,22 @@
-import { parseData } from "./parse-data";
+import { readData } from "./app/read-data";
+import { parseData } from "./app/parse-data";
+import { parsePercentValue } from "./app/value-parsers";
 import {
   createPortfolio,
   getPortfolioValue,
   rebalance,
   updatePortfolio,
-} from "./portfolio";
+} from "./app/portfolio";
 
 const main = async () => {
   console.log("Parsing CSV...");
   const keys = ["stocks", "bonds", "cash", "reit", "gold"];
   const csvFilePath = process.argv[2];
-  const changes = await parseData(csvFilePath, keys);
+  const dataRows = await readData(csvFilePath);
+  const changes = parseData(dataRows, keys, parsePercentValue);
 
-  console.log("Calculating...");
+  console.log(changes);
+
   const initialValue = 100000;
   const allocation = {
     stocks: 0.2,
