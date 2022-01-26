@@ -20,9 +20,11 @@ describe("backtest", () => {
     expect(actual).toEqual({
       endValue: expect.any(Number),
       valueRatio: expect.any(Number),
+      allocation: expect.any(Object),
     });
 
     expect(actual.endValue).toBeCloseTo(1340, 0);
     expect(actual.valueRatio).toBeCloseTo(1.34, 2);
+    expect(actual.allocation).toEqual(allocation);
   });
 });

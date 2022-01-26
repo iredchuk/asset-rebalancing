@@ -9,10 +9,10 @@ export const createPortfolio = (
   allocation: Allocation
 ): Portfolio =>
   Object.entries(allocation).reduce<Portfolio>(
-    (result, [asset, assetAllocation]) => {
-      result[asset] = value * assetAllocation;
-      return result;
-    },
+    (result, [asset, assetAllocation]) => ({
+      ...result,
+      [asset]: value * assetAllocation,
+    }),
     {}
   );
 

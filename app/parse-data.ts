@@ -12,8 +12,7 @@ const parseDataRow = (
       dataRow[key],
       `Key ${key} not found in a data row at index ${index}`
     );
-    result[key] = valueParser(dataRow[key].trim());
-    return result;
+    return { ...result, [key]: valueParser(dataRow[key].trim()) };
   }, {});
 
 export const parseData = (
