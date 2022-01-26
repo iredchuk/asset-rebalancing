@@ -3,7 +3,11 @@
     "target": "ES2021",
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "noEmit": true,
     "strict": true,
-    "noEmit": true
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   }
 }
