@@ -1,8 +1,8 @@
-type Portfolio = Record<string, number>;
+export type Portfolio = Record<string, number>;
 
-type Change = Record<string, number>;
+export type Change = Record<string, number>;
 
-type Allocation = Record<string, number>;
+export type Allocation = Record<string, number>;
 
 export const createPortfolio = (
   value: number,
