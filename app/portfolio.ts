@@ -12,17 +12,14 @@ export interface Allocation {
 export const getRecordTotal = (record: Record<string, number>): number =>
   Object.values(record).reduce((result, value) => result + value, 0);
 
-export const createAllocation = (
-  rawValues: Record<string, number>,
-  name?: string
-) => {
+export const createAllocation = (rawValues: Record<string, number>) => {
   const total = getRecordTotal(rawValues);
   assert(total > 0, "Allocation total must be greater than 0");
   const values = Object.entries(rawValues).reduce<Record<string, number>>(
     (result, [asset, value]) => ({ ...result, [asset]: value / total }),
     {}
   );
-  return { name, values };
+  return { values };
 };
 
 export const createPortfolio = (

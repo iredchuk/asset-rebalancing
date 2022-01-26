@@ -9,25 +9,22 @@ import {
 describe("portfolio", () => {
   describe("createAllocation", () => {
     test("with normalized values", () => {
-      const actual = createAllocation(
-        { stocks: 0.5, bonds: 0.2, cash: 0.3 },
-        "test"
-      );
+      const actual = createAllocation({ stocks: 0.5, bonds: 0.2, cash: 0.3 });
 
       expect(actual).toEqual({
-        name: "test",
         values: { stocks: 0.5, bonds: 0.2, cash: 0.3 },
       });
     });
 
     test("with non-normalized values", () => {
-      const actual = createAllocation(
-        { stocks: 0.8, bonds: 0.5, cash: 0.7, nothing: 0 },
-        "test"
-      );
+      const actual = createAllocation({
+        stocks: 80,
+        bonds: 50,
+        cash: 70,
+        nothing: 0,
+      });
 
       expect(actual).toEqual({
-        name: "test",
         values: { stocks: 0.4, bonds: 0.25, cash: 0.35, nothing: 0 },
       });
     });

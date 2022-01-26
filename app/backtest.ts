@@ -16,6 +16,16 @@ interface BackTestResult {
   allocation?: Allocation;
 }
 
+const compareResults = (a: BackTestResult, b: BackTestResult): number => {
+  if (a.endValue > b.endValue) {
+    return 1;
+  }
+  if (a.endValue < b.endValue) {
+    return -1;
+  }
+  return 0;
+};
+
 export const backTestAllocation = (
   initialValue: number,
   allocation: Allocation,
@@ -36,32 +46,32 @@ export const backTestAllocation = (
   };
 };
 
-type Allocations = Record<string, number[]>;
+type AllocationCombinations = Record<string, number[]>;
 
 const selectAllocation = (
-  allocations: Allocations,
-  values: number[]
+  allocations: AllocationCombinations,
+  assetValues: number[]
 ): Allocation => {
-  // TODO: create valid allocation not greater than 1 in total value
-  const allocationValues = Object.keys(allocations).reduce<
-    Record<string, number>
-  >((result, asset, i) => ({ ...result, [asset]: values[i] }), {});
+  const values = Object.keys(allocations).reduce<Record<string, number>>(
+    (result, asset, i) => ({ ...result, [asset]: assetValues[i] }),
+    {}
+  );
 
-  return createAllocation(allocationValues, JSON.stringify(allocationValues));
+  return createAllocation(values);
 };
 
 export const backTestAllocationCombinations = (
   initialValue: number,
-  allocations: Allocations,
+  allocationCombinations: AllocationCombinations,
   changes: Change[]
 ): BackTestResult => {
   let bestResult: BackTestResult = { endValue: 0, valueRatio: 0 };
-  const combinations = Object.values(allocations);
+  const combinations = Object.values(allocationCombinations);
 
   iterateOverArrays(combinations, (values) => {
-    const allocation = selectAllocation(allocations, values);
+    const allocation = selectAllocation(allocationCombinations, values);
     const result = backTestAllocation(initialValue, allocation, changes);
-    if (result.endValue > bestResult.endValue) {
+    if (compareResults(result, bestResult) > 0) {
       bestResult = result;
     }
   });
