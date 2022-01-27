@@ -46,7 +46,7 @@ export const backTestAllocation = (
   };
 };
 
-type AllocationCombinations = Record<string, number[]>;
+export type AllocationCombinations = Record<string, number[]>;
 
 const selectAllocation = (
   allocations: AllocationCombinations,
