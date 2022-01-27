@@ -5,6 +5,7 @@ import {
   AllocationCombinations,
   backTestAllocationCombinations,
 } from "./app/backtest";
+import { byEndValue } from "./app/result-comparers";
 
 const main = async () => {
   console.log("Parsing input files...");
@@ -24,11 +25,13 @@ const main = async () => {
   );
 
   const initialValue = 100000;
-  const bestResult = backTestAllocationCombinations(
+  const bestResult = backTestAllocationCombinations({
     initialValue,
     allocationCombinations,
-    changes
-  );
+    changes,
+    resultsLimit: 3,
+    resultsComparer: byEndValue,
+  });
 
   console.log("Best result: ", JSON.stringify(bestResult, null, 2));
 };

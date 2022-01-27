@@ -1,5 +1,6 @@
 import { backTestAllocation, backTestAllocationCombinations } from "./backtest";
 import { createAllocation } from "./portfolio";
+import { byEndValue } from "./result-comparers";
 
 describe("backtest", () => {
   describe("backTestAllocation", () => {
@@ -8,16 +9,17 @@ describe("backtest", () => {
 
       const allocation = createAllocation({
         stocks: 1,
+        bonds: 0,
       });
 
       const changes = [
-        { stocks: 0.2 },
-        { stocks: 0.2 },
-        { stocks: 0.2 },
-        { stocks: 0.2 },
+        { stocks: 0.5, bonds: 0.3 },
+        { stocks: 0, bonds: 0.1 },
+        { stocks: 0.3, bonds: -0.5 },
+        { stocks: 0.4, bonds: 0.4 },
       ];
 
-      const actual = backTestAllocation(initialValue, allocation, changes);
+      const actual = backTestAllocation({ initialValue, allocation, changes });
 
       expect(actual).toStrictEqual({
         endValue: expect.any(Number),
@@ -25,8 +27,8 @@ describe("backtest", () => {
         allocation: expect.any(Object),
       });
 
-      expect(actual.endValue).toBe(2073.6);
-      expect(actual.valueRatio).toBe(2.0736);
+      expect(actual.endValue).toBe(2730);
+      expect(actual.valueRatio).toBe(2.73);
       expect(actual.allocation).toEqual(allocation);
     });
 
@@ -44,7 +46,7 @@ describe("backtest", () => {
         { stocks: 0.3, cash: -0.1 },
       ];
 
-      const actual = backTestAllocation(initialValue, allocation, changes);
+      const actual = backTestAllocation({ initialValue, allocation, changes });
 
       expect(actual).toStrictEqual({
         endValue: expect.any(Number),
@@ -59,7 +61,7 @@ describe("backtest", () => {
   });
 
   describe("backTestAllocationCombinations", () => {
-    test("with two equal assets", () => {
+    test("with two equal assets and 1 result", () => {
       const initialValue = 1000;
 
       const allocationCombinations = {
@@ -86,21 +88,25 @@ describe("backtest", () => {
         },
       ];
 
-      const actual = backTestAllocationCombinations(
+      const actual = backTestAllocationCombinations({
         initialValue,
         allocationCombinations,
-        changes
-      );
-
-      expect(actual).toStrictEqual({
-        endValue: expect.any(Number),
-        valueRatio: expect.any(Number),
-        allocation: expect.any(Object),
+        changes,
+        resultsLimit: 1,
+        resultsComparer: byEndValue,
       });
 
-      expect(actual.endValue).toBeCloseTo(1242, 0);
-      expect(actual.valueRatio).toBeCloseTo(1.242, 3);
-      expect(actual.allocation).toEqual({
+      expect(actual).toStrictEqual([
+        {
+          endValue: expect.any(Number),
+          valueRatio: expect.any(Number),
+          allocation: expect.any(Object),
+        },
+      ]);
+
+      expect(actual[0].endValue).toBeCloseTo(1242, 0);
+      expect(actual[0].valueRatio).toBeCloseTo(1.242, 3);
+      expect(actual[0].allocation).toEqual({
         values: {
           stocks: 0.5,
           bonds: 0.5,
@@ -109,7 +115,7 @@ describe("backtest", () => {
       });
     });
 
-    test("with one much better asset", () => {
+    test("with one much better asset and 3 results", () => {
       const initialValue = 1000;
 
       const allocationCombinations = {
@@ -136,26 +142,60 @@ describe("backtest", () => {
         },
       ];
 
-      const actual = backTestAllocationCombinations(
+      const actual = backTestAllocationCombinations({
         initialValue,
         allocationCombinations,
-        changes
-      );
-
-      expect(actual).toStrictEqual({
-        endValue: expect.any(Number),
-        valueRatio: expect.any(Number),
-        allocation: expect.any(Object),
+        changes,
+        resultsLimit: 3,
+        resultsComparer: byEndValue,
       });
 
-      expect(actual.endValue).toBeCloseTo(1615, 0);
-      expect(actual.valueRatio).toBeCloseTo(1.615, 3);
-      expect(actual.allocation).toEqual({
+      expect(actual).toStrictEqual([
+        {
+          endValue: expect.any(Number),
+          valueRatio: expect.any(Number),
+          allocation: expect.any(Object),
+        },
+        {
+          endValue: expect.any(Number),
+          valueRatio: expect.any(Number),
+          allocation: expect.any(Object),
+        },
+        {
+          endValue: expect.any(Number),
+          valueRatio: expect.any(Number),
+          allocation: expect.any(Object),
+        },
+      ]);
+
+      expect(actual[0].endValue).toBeCloseTo(1615, 0);
+      expect(actual[0].valueRatio).toBeCloseTo(1.615, 3);
+      expect(actual[0].allocation).toEqual({
         values: {
           stocks: 0.8,
           cash: 0.2,
         },
       });
+
+      expect(actual[1].endValue).toBeCloseTo(1508, 0);
+      expect(actual[1].valueRatio).toBeCloseTo(1.508, 3);
+      expect(actual[1].allocation!.values.stocks).toBeGreaterThan(
+        actual[1].allocation!.values.cash
+      );
+
+      expect(actual[2].endValue).toBeCloseTo(1389, 0);
+      expect(actual[2].valueRatio).toBeCloseTo(1.389, 3);
+      expect(actual[2].allocation!.values.stocks).toBeGreaterThan(
+        actual[1].allocation!.values.cash
+      );
+
+      expect(actual[0].allocation!.values.stocks).toBeGreaterThan(
+        actual[1].allocation!.values.stocks
+      );
+
+      expect(actual[1].allocation!.values.stocks).toBeGreaterThan(
+        actual[2].allocation!.values.stocks
+      );
     });
   });
 });

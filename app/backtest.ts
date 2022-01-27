@@ -9,28 +9,24 @@ import {
 } from "./portfolio";
 
 import { iterateOverArrays } from "./iterate-over-arrays";
+import { pushSortedCapped } from "./push-sorted-capped";
 
-interface BackTestResult {
+export interface BackTestResult {
   endValue: number;
   valueRatio: number;
   allocation?: Allocation;
 }
 
-const compareResults = (a: BackTestResult, b: BackTestResult): number => {
-  if (a.endValue > b.endValue) {
-    return 1;
-  }
-  if (a.endValue < b.endValue) {
-    return -1;
-  }
-  return 0;
-};
+export interface BacktestAllocationParams {
+  initialValue: number;
+  allocation: Allocation;
+  changes: Change[];
+}
 
 export const backTestAllocation = (
-  initialValue: number,
-  allocation: Allocation,
-  changes: Change[]
+  params: BacktestAllocationParams
 ): BackTestResult => {
+  const { initialValue, allocation, changes } = params;
   const resultPortfolio = changes.reduce(
     (portfolio, change) =>
       rebalance(updatePortfolio(portfolio, change), allocation),
@@ -60,21 +56,33 @@ const selectAllocation = (
   return createAllocation(values);
 };
 
+interface BacktestCombinationsParams {
+  initialValue: number;
+  allocationCombinations: AllocationCombinations;
+  changes: Change[];
+  resultsLimit: number;
+  resultsComparer: (a: BackTestResult, b: BackTestResult) => number;
+}
+
 export const backTestAllocationCombinations = (
-  initialValue: number,
-  allocationCombinations: AllocationCombinations,
-  changes: Change[]
-): BackTestResult => {
-  let bestResult: BackTestResult = { endValue: 0, valueRatio: 0 };
+  params: BacktestCombinationsParams
+): BackTestResult[] => {
+  const {
+    initialValue,
+    allocationCombinations,
+    changes,
+    resultsLimit,
+    resultsComparer,
+  } = params;
+
+  let bestResults: BackTestResult[] = [];
   const combinations = Object.values(allocationCombinations);
 
   iterateOverArrays(combinations, (values) => {
     const allocation = selectAllocation(allocationCombinations, values);
-    const result = backTestAllocation(initialValue, allocation, changes);
-    if (compareResults(result, bestResult) > 0) {
-      bestResult = result;
-    }
+    const result = backTestAllocation({ initialValue, allocation, changes });
+    pushSortedCapped(bestResults, result, resultsLimit, resultsComparer);
   });
 
-  return bestResult;
+  return bestResults;
 };
