@@ -107,11 +107,9 @@ describe("backtest", () => {
       expect(actual[0].endValue).toBeCloseTo(1242, 0);
       expect(actual[0].valueRatio).toBeCloseTo(1.242, 3);
       expect(actual[0].allocation).toEqual({
-        values: {
-          stocks: 0.5,
-          bonds: 0.5,
-          cash: 0,
-        },
+        stocks: 0.5,
+        bonds: 0.5,
+        cash: 0,
       });
     });
 
@@ -171,30 +169,28 @@ describe("backtest", () => {
       expect(actual[0].endValue).toBeCloseTo(1615, 0);
       expect(actual[0].valueRatio).toBeCloseTo(1.615, 3);
       expect(actual[0].allocation).toEqual({
-        values: {
-          stocks: 0.8,
-          cash: 0.2,
-        },
+        stocks: 0.8,
+        cash: 0.2,
       });
 
       expect(actual[1].endValue).toBeCloseTo(1508, 0);
       expect(actual[1].valueRatio).toBeCloseTo(1.508, 3);
-      expect(actual[1].allocation!.values.stocks).toBeGreaterThan(
-        actual[1].allocation!.values.cash
+      expect(actual[1].allocation!.stocks).toBeGreaterThan(
+        actual[1].allocation!.cash
       );
 
       expect(actual[2].endValue).toBeCloseTo(1389, 0);
       expect(actual[2].valueRatio).toBeCloseTo(1.389, 3);
-      expect(actual[2].allocation!.values.stocks).toBeGreaterThan(
-        actual[1].allocation!.values.cash
+      expect(actual[2].allocation!.stocks).toBeGreaterThan(
+        actual[1].allocation!.cash
       );
 
-      expect(actual[0].allocation!.values.stocks).toBeGreaterThan(
-        actual[1].allocation!.values.stocks
+      expect(actual[0].allocation!.stocks).toBeGreaterThan(
+        actual[1].allocation!.stocks
       );
 
-      expect(actual[1].allocation!.values.stocks).toBeGreaterThan(
-        actual[2].allocation!.values.stocks
+      expect(actual[1].allocation!.stocks).toBeGreaterThan(
+        actual[2].allocation!.stocks
       );
     });
   });

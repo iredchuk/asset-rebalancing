@@ -4,29 +4,27 @@ export type Portfolio = Record<string, number>;
 
 export type Change = Record<string, number>;
 
-export interface Allocation {
-  values: Record<string, number>;
-  name?: string;
-}
+export type Allocation = Record<string, number>;
 
 export const getRecordTotal = (record: Record<string, number>): number =>
   Object.values(record).reduce((result, value) => result + value, 0);
 
-export const createAllocation = (rawValues: Record<string, number>) => {
+export const createAllocation = (
+  rawValues: Record<string, number>
+): Allocation => {
   const total = getRecordTotal(rawValues);
   assert(total > 0, "Allocation total must be greater than 0");
-  const values = Object.entries(rawValues).reduce<Record<string, number>>(
+  return Object.entries(rawValues).reduce<Record<string, number>>(
     (result, [asset, value]) => ({ ...result, [asset]: value / total }),
     {}
   );
-  return { values };
 };
 
 export const createPortfolio = (
   value: number,
   allocation: Allocation
 ): Portfolio =>
-  Object.entries(allocation.values).reduce<Portfolio>(
+  Object.entries(allocation).reduce<Portfolio>(
     (result, [asset, assetAllocation]) => ({
       ...result,
       [asset]: value * assetAllocation,

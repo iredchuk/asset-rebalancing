@@ -25,6 +25,7 @@ const main = async () => {
   );
 
   const initialValue = 100000;
+
   const bestResult = backTestAllocationCombinations({
     initialValue,
     allocationCombinations,

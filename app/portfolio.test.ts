@@ -12,7 +12,9 @@ describe("portfolio", () => {
       const actual = createAllocation({ stocks: 0.5, bonds: 0.2, cash: 0.3 });
 
       expect(actual).toEqual({
-        values: { stocks: 0.5, bonds: 0.2, cash: 0.3 },
+        stocks: 0.5,
+        bonds: 0.2,
+        cash: 0.3,
       });
     });
 
@@ -25,7 +27,10 @@ describe("portfolio", () => {
       });
 
       expect(actual).toEqual({
-        values: { stocks: 0.4, bonds: 0.25, cash: 0.35, nothing: 0 },
+        stocks: 0.4,
+        bonds: 0.25,
+        cash: 0.35,
+        nothing: 0,
       });
     });
   });
