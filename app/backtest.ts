@@ -9,7 +9,6 @@ import {
 } from "./portfolio";
 
 import { iterateOverArrays } from "./iterate";
-import { pushSortedCapped } from "./push-sorted-capped";
 
 export interface BackTestResult {
   endValue: number;
@@ -45,11 +44,11 @@ export const backTestAllocation = (
 export type AllocationCombinations = Record<string, number[]>;
 
 const selectAllocation = (
-  allocations: AllocationCombinations,
-  assetValues: number[]
+  assets: string[],
+  assetAllocations: number[]
 ): Allocation => {
-  const values = Object.keys(allocations).reduce<Record<string, number>>(
-    (result, asset, i) => ({ ...result, [asset]: assetValues[i] }),
+  const values = assets.reduce<Record<string, number>>(
+    (result, asset, i) => ({ ...result, [asset]: assetAllocations[i] }),
     {}
   );
 
@@ -77,11 +76,14 @@ export const backTestAllocationCombinations = (
 
   let bestResults: BackTestResult[] = [];
   const combinations = Object.values(allocationCombinations);
+  const assets = Object.keys(allocationCombinations);
 
-  iterateOverArrays(combinations, (values) => {
-    const allocation = selectAllocation(allocationCombinations, values);
+  iterateOverArrays(combinations, (assetAllocations) => {
+    const allocation = selectAllocation(assets, assetAllocations);
     const result = backTestAllocation({ initialValue, allocation, changes });
-    pushSortedCapped(bestResults, result, resultsLimit, resultsComparer);
+    bestResults.push(result);
+    bestResults.sort(resultsComparer);
+    bestResults.splice(resultsLimit);
   });
 
   return bestResults;
