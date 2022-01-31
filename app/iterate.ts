@@ -1,25 +1,15 @@
-interface DivisionResult {
-  quotient: number;
-  remainder: number;
-}
-
-const divide = (a: number, b: number): DivisionResult => ({
-  quotient: Math.floor(a / b),
-  remainder: a % b,
-});
-
 const pickItems = <T>(arrays: T[][], combination: number): T[] => {
   const items: T[] = [];
   let next = combination;
 
-  for (const array of arrays) {
+  for (let i = 0; i < arrays.length; ++i) {
+    const array = arrays[i];
     if (array.length === 0) {
       continue;
     }
 
-    const { quotient, remainder } = divide(next, array.length);
-    items.push(array[remainder]);
-    next = quotient;
+    items[i] = array[next % array.length];
+    next = Math.floor(next / array.length);
   }
 
   return items;

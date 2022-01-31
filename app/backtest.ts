@@ -8,7 +8,7 @@ import {
   updatePortfolio,
 } from "./portfolio";
 
-import { iterateOverArrays } from "./iterate-over-arrays";
+import { iterateOverArrays } from "./iterate";
 import { pushSortedCapped } from "./push-sorted-capped";
 
 export interface BackTestResult {

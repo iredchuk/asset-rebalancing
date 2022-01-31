@@ -1,6 +1,6 @@
-import { iterateOverArrays } from "./iterate-over-arrays";
+import { iterateOverArrays } from "./iterate";
 
-describe("iterate-over-arrays", () => {
+describe("iterateOverArrays", () => {
   test("with one array", () => {
     const visited: string[] = [];
 
