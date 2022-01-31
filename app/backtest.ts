@@ -6,6 +6,7 @@ import {
   getPortfolioValue,
   rebalance,
   updatePortfolio,
+  getRecordTotal,
 } from "./portfolio";
 
 import { iterateOverArrays } from "./iterate";
@@ -43,16 +44,20 @@ export const backTestAllocation = (
 
 export type AllocationCombinations = Record<string, number[]>;
 
-const selectAllocation = (
+const tryCreateAllocation = (
   assets: string[],
   assetAllocations: number[]
-): Allocation => {
-  const values = assets.reduce<Record<string, number>>(
+): Allocation | undefined => {
+  const allocation = assets.reduce<Record<string, number>>(
     (result, asset, i) => ({ ...result, [asset]: assetAllocations[i] }),
     {}
   );
 
-  return createAllocation(values);
+  if (Math.abs(getRecordTotal(allocation) - 1) >= 0.01) {
+    return undefined;
+  }
+
+  return createAllocation(allocation);
 };
 
 interface BacktestCombinationsParams {
@@ -79,7 +84,11 @@ export const backTestAllocationCombinations = (
   const assets = Object.keys(allocationCombinations);
 
   iterateOverArrays(combinations, (assetAllocations) => {
-    const allocation = selectAllocation(assets, assetAllocations);
+    const allocation = tryCreateAllocation(assets, assetAllocations);
+    if (allocation === undefined) {
+      return;
+    }
+
     const result = backTestAllocation({ initialValue, allocation, changes });
     bestResults.push(result);
     bestResults.sort(resultsComparer);

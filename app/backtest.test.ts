@@ -65,9 +65,9 @@ describe("backtest", () => {
       const initialValue = 1000;
 
       const allocationCombinations = {
-        stocks: [0.1, 0.3, 0.7, 1],
-        bonds: [0, 0.3, 0.7, 1],
-        cash: [0, 0.1, 0.2],
+        stocks: [0, 0.3, 0.5, 0.7, 1],
+        bonds: [0, 0.3, 0.5, 0.7, 1],
+        cash: [0, 0.1, 0.2, 0.3],
       };
 
       const changes = [
@@ -117,8 +117,8 @@ describe("backtest", () => {
       const initialValue = 1000;
 
       const allocationCombinations = {
-        stocks: [0.2, 0.5, 0.8],
-        cash: [0.2, 0.5, 0.8],
+        stocks: [0, 0.2, 0.5, 0.8, 1],
+        cash: [0, 0.2, 0.5, 0.8, 1],
       };
 
       const changes = [
@@ -166,21 +166,21 @@ describe("backtest", () => {
         },
       ]);
 
-      expect(actual[0].endValue).toBeCloseTo(1615, 0);
-      expect(actual[0].valueRatio).toBeCloseTo(1.615, 3);
+      expect(actual[0].endValue).toBeCloseTo(1871, 0);
+      expect(actual[0].valueRatio).toBeCloseTo(1.871, 3);
       expect(actual[0].allocation).toEqual({
-        stocks: 0.8,
-        cash: 0.2,
+        stocks: 1,
+        cash: 0,
       });
 
-      expect(actual[1].endValue).toBeCloseTo(1508, 0);
-      expect(actual[1].valueRatio).toBeCloseTo(1.508, 3);
+      expect(actual[1].endValue).toBeCloseTo(1615, 0);
+      expect(actual[1].valueRatio).toBeCloseTo(1.615, 3);
       expect(actual[1].allocation!.stocks).toBeGreaterThan(
         actual[1].allocation!.cash
       );
 
-      expect(actual[2].endValue).toBeCloseTo(1389, 0);
-      expect(actual[2].valueRatio).toBeCloseTo(1.389, 3);
+      expect(actual[2].endValue).toBeCloseTo(1254, 0);
+      expect(actual[2].valueRatio).toBeCloseTo(1.254, 3);
       expect(actual[2].allocation!.stocks).toBeGreaterThan(
         actual[1].allocation!.cash
       );
