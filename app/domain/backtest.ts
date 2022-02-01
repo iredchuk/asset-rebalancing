@@ -49,10 +49,10 @@ export const backTestAllocation = (
   }, createPortfolio(initialValue, allocation));
 
   const portfolioValue = getPortfolioValue(resultPortfolio);
-
-  const sortinoRatio =
-    (portfolioValue - initialValue) /
-    (initialValue * changes.length * (stdev(allDrawdowns) || 0.01));
+  const portfolioReturn = (portfolioValue - initialValue) / initialValue;
+  const averageAnnualReturn =
+    Math.pow(1 + portfolioReturn, 1 / changes.length) - 1;
+  const sortinoRatio = averageAnnualReturn / (stdev(allDrawdowns) || 0.01);
 
   return {
     portfolioValue,
