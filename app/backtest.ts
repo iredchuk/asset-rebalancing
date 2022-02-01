@@ -12,8 +12,7 @@ import {
 import { iterateOverArrays } from "./iterate";
 
 export interface BackTestResult {
-  endValue: number;
-  valueRatio: number;
+  portfolioValue: number;
   allocation?: Allocation;
 }
 
@@ -33,11 +32,8 @@ export const backTestAllocation = (
     createPortfolio(initialValue, allocation)
   );
 
-  const endValue = getPortfolioValue(resultPortfolio);
-
   return {
-    endValue,
-    valueRatio: endValue / initialValue,
+    portfolioValue: getPortfolioValue(resultPortfolio),
     allocation: { ...allocation },
   };
 };

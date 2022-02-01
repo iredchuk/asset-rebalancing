@@ -6,8 +6,8 @@ import {
   AllocationCombinations,
   backTestAllocationCombinations,
 } from "./app/backtest";
-import { byEndValue } from "./app/result-comparers";
-import { formatResults } from "./app/formatResults";
+import { byPortfolioValue } from "./app/result-comparers";
+import { formatResults } from "./app/format-results";
 
 const main = async () => {
   console.log("Parsing input files...");
@@ -34,7 +34,7 @@ const main = async () => {
     allocationCombinations,
     changes,
     resultsLimit,
-    resultsComparer: byEndValue,
+    resultsComparer: byPortfolioValue,
   });
 
   console.log("Best results:");
