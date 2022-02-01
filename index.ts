@@ -1,13 +1,13 @@
 import assert from "assert";
-import { readCsv, readJson } from "./app/file-reader";
-import { parseData } from "./app/parse-data";
-import { parsePercentValue } from "./app/value-parsers";
+import { readCsv, readJson } from "./app/utils/file-reader";
+import { parseData } from "./app/utils/parse-data";
+import { parsePercentValue } from "./app/utils/value-parsers";
 import {
   AllocationCombinations,
   backTestAllocationCombinations,
-} from "./app/backtest";
-import { byPortfolioValue } from "./app/result-comparers";
-import { formatResults } from "./app/format-results";
+} from "./app/domain/backtest";
+import { byPortfolioValue } from "./app/domain/result-comparers";
+import { formatResults } from "./app/domain/format-results";
 
 const main = async () => {
   console.log("Parsing input files...");

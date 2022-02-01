@@ -1,5 +1,5 @@
 import assert from "assert";
-import { sum } from "./stat";
+import { sum } from "../utils/stat";
 
 export type Portfolio = Record<string, number>;
 

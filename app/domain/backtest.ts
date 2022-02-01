@@ -7,8 +7,8 @@ import {
   rebalance,
   updatePortfolio,
 } from "./portfolio";
-import { iterateOverArrays } from "./iterate";
-import { sum } from "./stat";
+import { iterateOverArrays } from "../utils/iterate";
+import { sum } from "../utils/stat";
 
 export interface BackTestResult {
   portfolioValue: number;
