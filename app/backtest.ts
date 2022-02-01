@@ -6,10 +6,9 @@ import {
   getPortfolioValue,
   rebalance,
   updatePortfolio,
-  getRecordTotal,
 } from "./portfolio";
-
 import { iterateOverArrays } from "./iterate";
+import { sum } from "./stat";
 
 export interface BackTestResult {
   portfolioValue: number;
@@ -49,7 +48,7 @@ const tryCreateAllocation = (
     {}
   );
 
-  if (Math.abs(getRecordTotal(allocation) - 1) >= 0.01) {
+  if (Math.abs(sum(Object.values(allocation)) - 1) >= 0.01) {
     return undefined;
   }
 

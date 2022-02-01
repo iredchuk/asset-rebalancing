@@ -1,3 +1,5 @@
+import { product } from "./stat";
+
 const pickItems = <T>(arrays: T[][], combination: number): T[] => {
   const items: T[] = [];
   let next = combination;
@@ -19,11 +21,7 @@ export const iterateOverArrays = <T>(
   arrays: T[][],
   action: (items: T[]) => void
 ) => {
-  const combinations = arrays.reduce(
-    (result, array) => result * (array.length || 1),
-    1
-  );
-
+  const combinations = product(arrays.map((a) => a.length || 1));
   for (let c = 0; c < combinations; c += 1) {
     action(pickItems(arrays, c));
   }

@@ -1,4 +1,5 @@
 import assert from "assert";
+import { sum } from "./stat";
 
 export type Portfolio = Record<string, number>;
 
@@ -6,13 +7,10 @@ export type Change = Record<string, number>;
 
 export type Allocation = Record<string, number>;
 
-export const getRecordTotal = (record: Record<string, number>): number =>
-  Object.values(record).reduce((result, value) => result + value, 0);
-
 export const createAllocation = (
   rawValues: Record<string, number>
 ): Allocation => {
-  const total = getRecordTotal(rawValues);
+  const total = sum(Object.values(rawValues));
   assert(total > 0, "Allocation total must be greater than 0");
   return Object.entries(rawValues).reduce<Record<string, number>>(
     (result, [asset, value]) => ({ ...result, [asset]: value / total }),
@@ -33,7 +31,7 @@ export const createPortfolio = (
   );
 
 export const getPortfolioValue = (portfolio: Portfolio): number =>
-  getRecordTotal(portfolio);
+  sum(Object.values(portfolio));
 
 export const updatePortfolio = (
   portfolio: Portfolio,
