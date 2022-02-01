@@ -8,10 +8,11 @@ import {
   updatePortfolio,
 } from "./portfolio";
 import { iterateOverArrays } from "../utils/iterate";
-import { sum } from "../utils/stat";
+import { stdev, sum } from "../utils/stat";
 
 export interface BackTestResult {
   portfolioValue: number;
+  sortinoRatio: number;
   allocation?: Allocation;
 }
 
@@ -19,20 +20,43 @@ export interface BacktestAllocationParams {
   initialValue: number;
   allocation: Allocation;
   changes: Change[];
+  minAcceptedReturn: number;
 }
 
 export const backTestAllocation = (
   params: BacktestAllocationParams
 ): BackTestResult => {
-  const { initialValue, allocation, changes } = params;
-  const resultPortfolio = changes.reduce(
-    (portfolio, change) =>
-      rebalance(updatePortfolio(portfolio, change), allocation),
-    createPortfolio(initialValue, allocation)
-  );
+  const { initialValue, allocation, changes, minAcceptedReturn } = params;
+  const allDrawdowns: number[] = [];
+
+  const resultPortfolio = changes.reduce((portfolio, change) => {
+    const initialPortfolioValue = getPortfolioValue(portfolio);
+    const updatedPortfolio = rebalance(
+      updatePortfolio(portfolio, change),
+      allocation
+    );
+
+    const updatedPortfolioValue = getPortfolioValue(updatedPortfolio);
+
+    const adjustedReturn =
+      (updatedPortfolioValue - initialPortfolioValue) / initialPortfolioValue -
+      minAcceptedReturn;
+
+    const drawdown = adjustedReturn < 0 ? Math.abs(adjustedReturn) : 0;
+    allDrawdowns.push(drawdown);
+
+    return updatedPortfolio;
+  }, createPortfolio(initialValue, allocation));
+
+  const portfolioValue = getPortfolioValue(resultPortfolio);
+
+  const sortinoRatio =
+    (portfolioValue - initialValue) /
+    (initialValue * changes.length * (stdev(allDrawdowns) || 0.01));
 
   return {
-    portfolioValue: getPortfolioValue(resultPortfolio),
+    portfolioValue,
+    sortinoRatio,
     allocation: { ...allocation },
   };
 };
@@ -59,6 +83,7 @@ interface BacktestCombinationsParams {
   initialValue: number;
   allocationCombinations: AllocationCombinations;
   changes: Change[];
+  minAcceptedReturn: number;
   resultsLimit: number;
   resultsComparer: (a: BackTestResult, b: BackTestResult) => number;
 }
@@ -70,6 +95,7 @@ export const backTestAllocationCombinations = (
     initialValue,
     allocationCombinations,
     changes,
+    minAcceptedReturn,
     resultsLimit,
     resultsComparer,
   } = params;
@@ -84,7 +110,13 @@ export const backTestAllocationCombinations = (
       return;
     }
 
-    const result = backTestAllocation({ initialValue, allocation, changes });
+    const result = backTestAllocation({
+      initialValue,
+      allocation,
+      changes,
+      minAcceptedReturn,
+    });
+
     bestResults.push(result);
     bestResults.sort(resultsComparer);
     bestResults.splice(resultsLimit);

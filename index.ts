@@ -28,11 +28,13 @@ const main = async () => {
   );
 
   const initialValue = 1;
+  const averageInflationRate = 0.04;
 
   const bestResults = backTestAllocationCombinations({
     initialValue,
     allocationCombinations,
     changes,
+    minAcceptedReturn: averageInflationRate,
     resultsLimit,
     resultsComparer: byPortfolioValue,
   });
