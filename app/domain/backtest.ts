@@ -13,6 +13,7 @@ import { stdev, sum } from "../utils/stat";
 export interface BackTestResult {
   portfolioValue: number;
   sortinoRatio: number;
+  maxDrawdown: number;
   allocation: Allocation;
 }
 
@@ -79,6 +80,7 @@ export const backTestAllocation = (
   return {
     portfolioValue,
     sortinoRatio,
+    maxDrawdown: Math.max(...allDrawdowns),
     allocation: { ...allocation },
   };
 };
