@@ -13,7 +13,7 @@ import { stdev, sum } from "../utils/stat";
 export interface BackTestResult {
   portfolioValue: number;
   sortinoRatio: number;
-  allocation?: Allocation;
+  allocation: Allocation;
 }
 
 export interface BacktestAllocationParams {
