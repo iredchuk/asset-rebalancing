@@ -23,6 +23,27 @@ export interface BacktestAllocationParams {
   minAcceptedReturn: number;
 }
 
+const getDrawdown = (
+  portfolioValueBefore: number,
+  portfolioValueAfter: number,
+  minAcceptedReturn: number
+) => {
+  const adjustedReturn =
+    portfolioValueAfter / portfolioValueBefore - 1 - minAcceptedReturn;
+  return Math.abs(Math.min(adjustedReturn, 0));
+};
+
+const getSortinoRatio = (
+  initialPortfolioValue: number,
+  portfolioValue: number,
+  periodsCount: number,
+  drawdowns: number[]
+) => {
+  const averagePeriodReturn =
+    Math.pow(portfolioValue / initialPortfolioValue, 1 / periodsCount) - 1;
+  return averagePeriodReturn / Math.max(stdev(drawdowns), 0.01);
+};
+
 export const backTestAllocation = (
   params: BacktestAllocationParams
 ): BackTestResult => {
@@ -36,23 +57,24 @@ export const backTestAllocation = (
       allocation
     );
 
-    const updatedPortfolioValue = getPortfolioValue(updatedPortfolio);
-
-    const adjustedReturn =
-      (updatedPortfolioValue - initialPortfolioValue) / initialPortfolioValue -
-      minAcceptedReturn;
-
-    const drawdown = adjustedReturn < 0 ? Math.abs(adjustedReturn) : 0;
-    allDrawdowns.push(drawdown);
+    allDrawdowns.push(
+      getDrawdown(
+        initialPortfolioValue,
+        getPortfolioValue(updatedPortfolio),
+        minAcceptedReturn
+      )
+    );
 
     return updatedPortfolio;
   }, createPortfolio(initialValue, allocation));
 
   const portfolioValue = getPortfolioValue(resultPortfolio);
-  const portfolioReturn = (portfolioValue - initialValue) / initialValue;
-  const averageAnnualReturn =
-    Math.pow(1 + portfolioReturn, 1 / changes.length) - 1;
-  const sortinoRatio = averageAnnualReturn / (stdev(allDrawdowns) || 0.01);
+  const sortinoRatio = getSortinoRatio(
+    initialValue,
+    portfolioValue,
+    changes.length,
+    allDrawdowns
+  );
 
   return {
     portfolioValue,

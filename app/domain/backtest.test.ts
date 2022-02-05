@@ -38,19 +38,20 @@ describe("backtest", () => {
       expect(actual.allocation).toEqual(allocation);
     });
 
-    test("with multiple assets", () => {
+    test("with multiple assets and minAcceptedReturn", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0.05;
+      const minAcceptedReturn = 0.1;
 
       const allocation = createAllocation({
-        stocks: 0.7,
-        cash: 0.3,
+        stocks: 0.5,
+        bonds: 0.3,
+        cash: 0.2,
       });
 
       const changes = [
-        { stocks: 0.5, cash: -0.1 },
-        { stocks: -0.2, cash: 0 },
-        { stocks: 0.3, cash: -0.1 },
+        { stocks: 0.5, bonds: 0.1, cash: -0.1 },
+        { stocks: -0.2, bonds: 0.2, cash: 0 },
+        { stocks: 0.3, bonds: 0.1, cash: -0.1 },
       ];
 
       const actual = backTestAllocation({
@@ -66,8 +67,42 @@ describe("backtest", () => {
         allocation: expect.any(Object),
       });
 
-      expect(actual.portfolioValue).toBeCloseTo(1340, 0);
-      expect(actual.sortinoRatio).toBeCloseTo(0.93, 2);
+      expect(actual.portfolioValue).toBeCloseTo(1403, 0);
+      expect(actual.sortinoRatio).toBeCloseTo(1.48, 2);
+      expect(actual.allocation).toEqual(allocation);
+    });
+
+    test("with losing portfolio and zero drawdown deviation", () => {
+      const initialValue = 1000;
+      const minAcceptedReturn = 0;
+
+      const allocation = createAllocation({
+        usd: 0.5,
+        eur: 0.5,
+      });
+
+      const changes = [
+        { usd: -0.1, eur: 0 },
+        { usd: 0, eur: -0.1 },
+        { usd: -0.1, eur: 0 },
+        { usd: 0, eur: -0.1 },
+      ];
+
+      const actual = backTestAllocation({
+        initialValue,
+        allocation,
+        changes,
+        minAcceptedReturn,
+      });
+
+      expect(actual).toStrictEqual({
+        portfolioValue: expect.any(Number),
+        sortinoRatio: expect.any(Number),
+        allocation: expect.any(Object),
+      });
+
+      expect(actual.portfolioValue).toBeCloseTo(814.5, 1);
+      expect(actual.sortinoRatio).toBeCloseTo(-5, 0);
       expect(actual.allocation).toEqual(allocation);
     });
   });
