@@ -56,8 +56,9 @@ describe("stat", () => {
       expect(() => stdev([])).toThrow();
     });
 
-    test("one item array - throws", () => {
-      expect(() => stdev([1])).toThrow();
+    test("one item array - returns 0", () => {
+      const actual = stdev([15]);
+      expect(actual).toBe(0);
     });
 
     test("same items array", () => {

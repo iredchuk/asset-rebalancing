@@ -13,9 +13,12 @@ export const avg = (array: number[]): number => {
 
 export const stdev = (array: number[]): number => {
   assert(
-    array.length > 1,
-    "Cannot calculate standard deviation for array with less than 2 items"
+    array.length > 0,
+    "Cannot calculate standard deviation for empty array"
   );
+  if (array.length === 1) {
+    return 0;
+  }
   const average = avg(array);
   const deviations = array.map((num) => (num - average) * (num - average));
   return Math.sqrt(sum(deviations) / (array.length - 1));
