@@ -2,11 +2,15 @@
   "name": "asset-rebalancing",
   "private": true,
   "version": "0.0.1",
-  "description": "asset rebalancing backtester",
+  "description": "asset allocation rebalancing backtester",
   "main": "index.ts",
   "scripts": {
     "start": "ts-node index",
     "test": "jest --watch"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "repository": {
     "type": "git",

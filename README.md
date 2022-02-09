@@ -1,4 +1,10 @@
-# asset-rebalancing
+# Asset Allocation Rebalancing Backtester
+
+A command-line tool to backtest possible asset allocations in an investment portfolio given historical data sample with periodic (e.g. yearly) returns for each asset class.
+
+## Prerequisites
+
+Node.js installed.
 
 ## Usage
 
@@ -6,7 +12,9 @@
 npm start ./data/<data-file>.csv ./data/<inputs-file>.json <resultsLimit>
 ```
 
-### Data file example
+## Input files
+
+> Example of a CSV data file with historical yearly returns
 
 ```csv
 year,stocks,bonds,gold
@@ -15,7 +23,9 @@ year,stocks,bonds,gold
 1974,-25.90%,-4.38%,63.47%
 ```
 
-### Inputs file example
+> Example of backtest inputs JSON file that contains asset allocation combinations for every asset that will be used for backtesting
+
+The key of each asset should be equal to the respective header in the Data file.
 
 ```json
 {
@@ -25,4 +35,10 @@ year,stocks,bonds,gold
 }
 ```
 
-Backtest algorithm will iterate over all valid allocation combinations and print out first best results specified by `resultsLimit` number.
+Backtest algorithm will iterate over all valid allocation combinations and print out first best results specified by the `resultsLimit` number.
+
+## Customization
+
+By default backtesting outputs best results by maximal Portfolio Value and then best results by maximal Sortino Ratio. If needed, `index.ts` can be adjusted to use any other results comparer once it's implemented.
+
+If a CSV data file with returns has different format, you might need to adjust the parser in `app/utils/value-parsers.ts`.
