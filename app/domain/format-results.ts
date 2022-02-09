@@ -9,7 +9,7 @@ export const formatResults = (results: BackTestResult[]): string =>
       allocation: Object.entries(result.allocation).reduce(
         (result, [asset, value]) => ({
           ...result,
-          [asset]: `${value * 100}%`,
+          [asset]: `${(value * 100).toFixed(0)}%`,
         }),
         {}
       ),
