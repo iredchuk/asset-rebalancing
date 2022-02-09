@@ -1,4 +1,4 @@
-import { product, sum, avg, stdev } from "./stat";
+import { product, sum, avg } from "./stat";
 
 describe("stat", () => {
   describe("sum", () => {
@@ -48,27 +48,6 @@ describe("stat", () => {
     test("several items array", () => {
       const actual = avg([1, -10, 17, 4]);
       expect(actual).toBeCloseTo(3, 0);
-    });
-  });
-
-  describe("stdev", () => {
-    test("empty array - throws", () => {
-      expect(() => stdev([])).toThrow();
-    });
-
-    test("one item array - returns 0", () => {
-      const actual = stdev([15]);
-      expect(actual).toBe(0);
-    });
-
-    test("same items array", () => {
-      const actual = stdev([5, 5, 5, 5, 5]);
-      expect(actual).toBeCloseTo(0, 0);
-    });
-
-    test("different items array", () => {
-      const actual = stdev([0.91, 0.1, -0.9, 0.55, -0.2]);
-      expect(actual).toBeCloseTo(0.7, 0);
     });
   });
 });
