@@ -2,6 +2,8 @@
 
 A command-line tool to backtest possible asset allocations in an investment portfolio given historical data sample with periodic (e.g. yearly) returns for each asset class.
 
+[![build status](https://img.shields.io/travis/iredchuk/asset-rebalancing/main.svg?style=flat-square)](https://app.travis-ci.com/github/iredchuk/asset-rebalancing)
+
 ## Prerequisites
 
 Node.js installed.
