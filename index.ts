@@ -6,10 +6,6 @@ import {
   AllocationCombinations,
   backTestAllocationCombinations,
 } from "./app/domain/backtest";
-import {
-  byPortfolioValue,
-  bySortinoRatio,
-} from "./app/domain/result-comparers";
 import { formatResults } from "./app/domain/format-results";
 
 const main = async () => {
@@ -25,35 +21,20 @@ const main = async () => {
   assert(resultsLimit > 0, "results limit not specified");
 
   const initialValue = 1;
-  const averageInflationRate = 0.04;
 
-  console.log(`Testing across ${changes.length} changes by Portfolio Value...`);
-
-  const bestResultsByValue = backTestAllocationCombinations({
-    initialValue,
-    allocationCombinations,
-    changes,
-    minAcceptedReturn: averageInflationRate,
-    resultsLimit,
-    resultsComparer: byPortfolioValue,
-  });
-
-  console.log("=== Best results by Portfolio Value ===");
-  console.log(formatResults(bestResultsByValue));
-  console.log("=====");
-
-  console.log(`Testing across ${changes.length} changes by Sortino Ratio...`);
+  console.log(`Testing across ${changes.length} changes...`);
 
   const bestResultsBySortinoRatio = backTestAllocationCombinations({
     initialValue,
     allocationCombinations,
     changes,
-    minAcceptedReturn: averageInflationRate,
+    minAcceptableReturn: 0.04,
     resultsLimit,
-    resultsComparer: bySortinoRatio,
+    compareByDesc: (result) => result.portfolioValue,
+    filter: (result) => result.sortinoRatio >= 1,
   });
 
-  console.log("=== Best results by Sortino Ratio ===");
+  console.log("=== Best results ===");
   console.log(formatResults(bestResultsBySortinoRatio));
   console.log("=====");
 };

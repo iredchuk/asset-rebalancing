@@ -1,12 +1,11 @@
 import { backTestAllocation, backTestAllocationCombinations } from "./backtest";
 import { createAllocation } from "./portfolio";
-import { byPortfolioValue, bySortinoRatio } from "./result-comparers";
 
 describe("backtest", () => {
   describe("backTestAllocation", () => {
     test("with one asset", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0;
+      const minAcceptableReturn = 0;
 
       const allocation = createAllocation({
         stocks: 1,
@@ -24,7 +23,7 @@ describe("backtest", () => {
         initialValue,
         allocation,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
       });
 
       expect(actual).toStrictEqual({
@@ -40,9 +39,9 @@ describe("backtest", () => {
       expect(actual.allocation).toEqual(allocation);
     });
 
-    test("with multiple assets and minAcceptedReturn", () => {
+    test("with multiple assets and minAcceptableReturn", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0.2;
+      const minAcceptableReturn = 0.2;
 
       const allocation = createAllocation({
         stocks: 0.5,
@@ -60,7 +59,7 @@ describe("backtest", () => {
         initialValue,
         allocation,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
       });
 
       expect(actual).toStrictEqual({
@@ -78,7 +77,7 @@ describe("backtest", () => {
 
     test("with losing portfolio and zero drawdown deviation", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0;
+      const minAcceptableReturn = 0;
 
       const allocation = createAllocation({
         usd: 0.5,
@@ -96,7 +95,7 @@ describe("backtest", () => {
         initialValue,
         allocation,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
       });
 
       expect(actual).toStrictEqual({
@@ -116,7 +115,7 @@ describe("backtest", () => {
   describe("backTestAllocationCombinations", () => {
     test("with two equal assets and 1 result by portfolio value", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0.05;
+      const minAcceptableReturn = 0.05;
 
       const allocationCombinations = {
         stocks: [0, 0.3, 0.5, 0.7, 1],
@@ -146,9 +145,9 @@ describe("backtest", () => {
         initialValue,
         allocationCombinations,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
         resultsLimit: 1,
-        resultsComparer: byPortfolioValue,
+        compareByDesc: (r) => r.portfolioValue,
       });
 
       expect(actual).toStrictEqual([
@@ -172,7 +171,7 @@ describe("backtest", () => {
 
     test("with one much better asset and 3 results by portfolio value", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0.05;
+      const minAcceptableReturn = 0.05;
 
       const allocationCombinations = {
         stocks: [0, 0.2, 0.5, 0.8, 1],
@@ -202,9 +201,9 @@ describe("backtest", () => {
         initialValue,
         allocationCombinations,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
         resultsLimit: 3,
-        resultsComparer: byPortfolioValue,
+        compareByDesc: (r) => r.portfolioValue,
       });
 
       expect(actual).toStrictEqual([
@@ -261,7 +260,7 @@ describe("backtest", () => {
 
     test("with almost equal assets and 2 results by Sortino ratio", () => {
       const initialValue = 1000;
-      const minAcceptedReturn = 0.05;
+      const minAcceptableReturn = 0.05;
 
       const allocationCombinations = {
         bonds: [0, 0.5, 1],
@@ -287,9 +286,9 @@ describe("backtest", () => {
         initialValue,
         allocationCombinations,
         changes,
-        minAcceptedReturn,
+        minAcceptableReturn,
         resultsLimit: 2,
-        resultsComparer: bySortinoRatio,
+        compareByDesc: (r) => r.sortinoRatio,
       });
 
       expect(actual).toStrictEqual([
@@ -321,6 +320,63 @@ describe("backtest", () => {
       expect(actual[1].allocation).toEqual({
         bonds: 0,
         gold: 1,
+      });
+    });
+
+    test("with filter by portfolio value", () => {
+      const initialValue = 1000;
+      const minAcceptableReturn = 0.05;
+
+      const allocationCombinations = {
+        stocks: [0, 0.3, 0.5, 0.7, 1],
+        bonds: [0, 0.3, 0.5, 0.7, 1],
+        cash: [0, 0.1, 0.2, 0.3],
+      };
+
+      const changes = [
+        {
+          stocks: 0.5,
+          bonds: -0.2,
+          cash: -0.1,
+        },
+        {
+          stocks: -0.3,
+          bonds: 0.1,
+          cash: 0,
+        },
+        {
+          stocks: 0.1,
+          bonds: 0.3,
+          cash: -0.1,
+        },
+      ];
+
+      const actual = backTestAllocationCombinations({
+        initialValue,
+        allocationCombinations,
+        changes,
+        minAcceptableReturn,
+        resultsLimit: 2,
+        compareByDesc: (r) => r.portfolioValue,
+        filter: (r) => r.sortinoRatio > 0.4,
+      });
+
+      expect(actual).toStrictEqual([
+        {
+          portfolioValue: expect.any(Number),
+          sortinoRatio: expect.any(Number),
+          maxDrawdown: expect.any(Number),
+          allocation: expect.any(Object),
+        },
+      ]);
+
+      expect(actual[0].portfolioValue).toBeCloseTo(1227, 0);
+      expect(actual[0].sortinoRatio).toBeCloseTo(0.444, 3);
+      expect(actual[0].maxDrawdown).toBeCloseTo(0.02, 2);
+      expect(actual[0].allocation).toEqual({
+        stocks: 0.3,
+        bonds: 0.7,
+        cash: 0,
       });
     });
   });

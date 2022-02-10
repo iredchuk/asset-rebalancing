@@ -29,16 +29,28 @@ The key of each asset should be equal to the respective header in the Data file.
 
 ```json
 {
-  "stocks": [0.5, 0.6, 0.7, 0.8, 0.9, 1],
-  "bonds": [0, 0.1, 0.2, 0.3, 0.4, 0.5],
-  "gold": [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+  "stocks": [0.5, 0.7, 1],
+  "bonds": [0, 0.3, 0.5],
+  "gold": [0, 0.3, 0.5]
 }
 ```
 
 Backtest algorithm will iterate over all valid allocation combinations and print out first best results specified by the `resultsLimit` number.
 
+That is, from the input file from the example above, allocations under test will be:
+
+```json
+[
+  { "stocks": 0.5, "bonds": 0, "gold": 0.5 },
+  { "stocks": 0.5, "bonds": 0.5, "gold": 0 },
+  { "stocks": 0.7, "bonds": 0.3, "gold": 0 },
+  { "stocks": 0.7, "bonds": 0, "gold": 0.3 },
+  { "stocks": 1, "bonds": 0, "gold": 0 }
+]
+```
+
 ## Customization
 
-By default backtesting outputs best results by maximal Portfolio Value and then best results by maximal Sortino Ratio. If needed, `index.ts` can be adjusted to use any other results comparer once it's implemented.
+By default backtesting outputs best results by maximal Portfolio Value that have Sortino Ratio at least 1 (with minumum acceptable return 4%). When needed, `index.ts` can be adjusted to use any other comparer, filter or MAR.
 
-If a CSV data file with returns has different format, you might need to adjust the parser in `app/utils/value-parsers.ts`.
+If the CSV file with returns data has different format, you might need to adjust the parser in `app/utils/value-parsers.ts`.
