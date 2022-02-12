@@ -34,8 +34,8 @@ describe("backtest", () => {
 
       expect(actual.totalReturn).toBeCloseTo(0.404, 3);
       expect(actual.averageReturn).toBeCloseTo(0.0885, 4);
-      expect(actual.sortinoRatio).toBeCloseTo(0.79, 2);
-      expect(actual.maxDrawdown).toBeCloseTo(0.2, 1);
+      expect(actual.sortinoRatio).toBeCloseTo(0.792, 3);
+      expect(actual.maxDrawdown).toBeCloseTo(0.2, 4);
       expect(actual.allocation).toEqual(allocation);
     });
 
@@ -71,7 +71,7 @@ describe("backtest", () => {
       expect(actual.totalReturn).toBeCloseTo(0.403, 3);
       expect(actual.averageReturn).toBeCloseTo(0.1195, 4);
       expect(actual.sortinoRatio).toBeCloseTo(-0.573, 3);
-      expect(actual.maxDrawdown).toBeCloseTo(0.04, 2);
+      expect(actual.maxDrawdown).toBeCloseTo(0.04, 4);
       expect(actual.allocation).toEqual(allocation);
     });
 
@@ -107,7 +107,7 @@ describe("backtest", () => {
       expect(actual.totalReturn).toBeCloseTo(-0.185, 3);
       expect(actual.averageReturn).toBeCloseTo(-0.05, 4);
       expect(actual.sortinoRatio).toBeCloseTo(-1, 0);
-      expect(actual.maxDrawdown).toBeCloseTo(0.05, 2);
+      expect(actual.maxDrawdown).toBeCloseTo(0.1855, 4);
       expect(actual.allocation).toEqual(allocation);
     });
   });
@@ -161,7 +161,7 @@ describe("backtest", () => {
       expect(actual[0].totalReturn).toBeCloseTo(0.242, 3);
       expect(actual[0].averageReturn).toBeCloseTo(0.0749, 4);
       expect(actual[0].sortinoRatio).toBeCloseTo(0.288, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 2);
+      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[0].allocation).toEqual({
         stocks: 0.5,
         bonds: 0.5,
@@ -231,7 +231,7 @@ describe("backtest", () => {
       expect(actual[0].totalReturn).toBeCloseTo(0.871, 3);
       expect(actual[0].averageReturn).toBeCloseTo(0.17, 3);
       expect(actual[0].sortinoRatio).toBeCloseTo(1.127, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 2);
+      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[0].allocation).toEqual({
         stocks: 1,
         cash: 0,
@@ -240,7 +240,7 @@ describe("backtest", () => {
       expect(actual[1].totalReturn).toBeCloseTo(0.615, 3);
       expect(actual[1].averageReturn).toBeCloseTo(0.127, 3);
       expect(actual[1].sortinoRatio).toBeCloseTo(0.778, 3);
-      expect(actual[1].maxDrawdown).toBeCloseTo(0.1, 2);
+      expect(actual[1].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[1].allocation!.stocks).toBeGreaterThan(
         actual[1].allocation!.cash
       );
@@ -248,7 +248,7 @@ describe("backtest", () => {
       expect(actual[2].totalReturn).toBeCloseTo(0.254, 3);
       expect(actual[2].averageReturn).toBeCloseTo(0.058, 3);
       expect(actual[2].sortinoRatio).toBeCloseTo(0.09, 2);
-      expect(actual[2].maxDrawdown).toBeCloseTo(0.1, 2);
+      expect(actual[2].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[2].allocation!.stocks).toBeGreaterThan(
         actual[1].allocation!.cash
       );
@@ -313,7 +313,7 @@ describe("backtest", () => {
       expect(actual[0].totalReturn).toBeCloseTo(0.088, 3);
       expect(actual[0].averageReturn).toBeCloseTo(0.028, 3);
       expect(actual[0].sortinoRatio).toBeCloseTo(-0.265, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 1);
+      expect(actual[0].maxDrawdown).toBeCloseTo(0.0975, 4);
       expect(actual[0].allocation).toEqual({
         bonds: 0.5,
         gold: 0.5,
@@ -321,8 +321,8 @@ describe("backtest", () => {
 
       expect(actual[1].totalReturn).toBeCloseTo(-0.153, 3);
       expect(actual[1].averageReturn).toBeCloseTo(-0.054, 3);
-      expect(actual[1].sortinoRatio).toBeCloseTo(-0.327, 2);
-      expect(actual[1].maxDrawdown).toBeCloseTo(0.5, 2);
+      expect(actual[1].sortinoRatio).toBeCloseTo(-0.327, 3);
+      expect(actual[1].maxDrawdown).toBeCloseTo(0.5, 4);
       expect(actual[1].allocation).toEqual({
         bonds: 0,
         gold: 1,
@@ -378,7 +378,7 @@ describe("backtest", () => {
       expect(actual[0].totalReturn).toBeCloseTo(0.227, 3);
       expect(actual[0].averageReturn).toBeCloseTo(0.071, 3);
       expect(actual[0].sortinoRatio).toBeCloseTo(0.444, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.02, 2);
+      expect(actual[0].maxDrawdown).toBeCloseTo(0.02, 4);
       expect(actual[0].allocation).toEqual({
         stocks: 0.3,
         bonds: 0.7,

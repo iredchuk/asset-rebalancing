@@ -24,7 +24,7 @@ export interface BacktestAllocationParams {
   minAcceptableReturn: number;
 }
 
-const getAdjustedDrawdown = (
+const getRelativeNegativeReturn = (
   portfolioValueBefore: number,
   portfolioValueAfter: number,
   minAcceptableReturn: number
@@ -43,10 +43,10 @@ const getAveragePeriodReturn = (
 const getSortinoRatio = (
   averagePeriodReturn: number,
   minAcceptableReturn: number,
-  drawdowns: number[]
+  negativeReturns: number[]
 ) => {
   const downsideDeviation = Math.sqrt(
-    sum(drawdowns.map((d) => d * d)) / drawdowns.length
+    sum(negativeReturns.map((d) => d * d)) / negativeReturns.length
   );
   return (
     (averagePeriodReturn - minAcceptableReturn) /
@@ -59,7 +59,9 @@ export const backTestAllocation = (
 ): BackTestResult => {
   const { allocation, changes, minAcceptableReturn } = params;
   const initialPortfolioValue = 1;
-  const adjustedDrawdowns: number[] = [];
+  const negativeReturns: number[] = [];
+  let lastHighValue = initialPortfolioValue;
+  let maxDrawdown = 0;
 
   const resultPortfolio = changes.reduce((portfolio, change) => {
     const initialPortfolioValue = getPortfolioValue(portfolio);
@@ -68,13 +70,24 @@ export const backTestAllocation = (
       allocation
     );
 
-    adjustedDrawdowns.push(
-      getAdjustedDrawdown(
+    const currentPortfolioValue = getPortfolioValue(updatedPortfolio);
+
+    negativeReturns.push(
+      getRelativeNegativeReturn(
         initialPortfolioValue,
-        getPortfolioValue(updatedPortfolio),
+        currentPortfolioValue,
         minAcceptableReturn
       )
     );
+
+    if (currentPortfolioValue > lastHighValue) {
+      lastHighValue = currentPortfolioValue;
+    } else {
+      const drawdown = 1 - currentPortfolioValue / lastHighValue;
+      if (drawdown > maxDrawdown) {
+        maxDrawdown = drawdown;
+      }
+    }
 
     return updatedPortfolio;
   }, createPortfolio(initialPortfolioValue, allocation));
@@ -92,10 +105,8 @@ export const backTestAllocation = (
   const sortinoRatio = getSortinoRatio(
     averageReturn,
     minAcceptableReturn,
-    adjustedDrawdowns
+    negativeReturns
   );
-
-  const maxDrawdown = Math.max(...adjustedDrawdowns) - minAcceptableReturn;
 
   return {
     totalReturn,
