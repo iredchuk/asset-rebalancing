@@ -11,14 +11,13 @@ import { iterateOverArrays } from "../utils/iterate";
 import { sum } from "../utils/stat";
 
 export interface BackTestResult {
-  portfolioValue: number;
+  totalReturn: number;
   sortinoRatio: number;
   maxDrawdown: number;
   allocation: Allocation;
 }
 
 export interface BacktestAllocationParams {
-  initialValue: number;
   allocation: Allocation;
   changes: Change[];
   minAcceptableReturn: number;
@@ -57,7 +56,8 @@ const getSortinoRatio = (
 export const backTestAllocation = (
   params: BacktestAllocationParams
 ): BackTestResult => {
-  const { initialValue, allocation, changes, minAcceptableReturn } = params;
+  const { allocation, changes, minAcceptableReturn } = params;
+  const initialPortfolioValue = 1;
   const adjustedDrawdowns: number[] = [];
 
   const resultPortfolio = changes.reduce((portfolio, change) => {
@@ -76,15 +76,17 @@ export const backTestAllocation = (
     );
 
     return updatedPortfolio;
-  }, createPortfolio(initialValue, allocation));
+  }, createPortfolio(initialPortfolioValue, allocation));
 
   const portfolioValue = getPortfolioValue(resultPortfolio);
 
   const averagePeriodReturn = getAveragePeriodReturn(
-    initialValue,
+    initialPortfolioValue,
     portfolioValue,
     changes.length
   );
+
+  const totalReturn = portfolioValue / initialPortfolioValue - 1;
 
   const sortinoRatio = getSortinoRatio(
     averagePeriodReturn,
@@ -95,7 +97,7 @@ export const backTestAllocation = (
   const maxDrawdown = Math.max(...adjustedDrawdowns) - minAcceptableReturn;
 
   return {
-    portfolioValue,
+    totalReturn,
     sortinoRatio,
     maxDrawdown,
     allocation: { ...allocation },
@@ -121,12 +123,11 @@ const tryCreateAllocation = (
 };
 
 interface BacktestCombinationsParams {
-  initialValue: number;
   allocationCombinations: AllocationCombinations;
   changes: Change[];
   minAcceptableReturn: number;
   resultsLimit: number;
-  compareByDesc: (r: BackTestResult) => number;
+  sortByDesc: (r: BackTestResult) => number;
   filter?: (r: BackTestResult) => boolean;
 }
 
@@ -134,12 +135,11 @@ export const backTestAllocationCombinations = (
   params: BacktestCombinationsParams
 ): BackTestResult[] => {
   const {
-    initialValue,
     allocationCombinations,
     changes,
     minAcceptableReturn,
     resultsLimit,
-    compareByDesc,
+    sortByDesc,
     filter,
   } = params;
 
@@ -148,7 +148,7 @@ export const backTestAllocationCombinations = (
   const assets = Object.keys(allocationCombinations);
 
   const compareResults = (a: BackTestResult, b: BackTestResult) =>
-    Math.sign(compareByDesc(b) - compareByDesc(a));
+    Math.sign(sortByDesc(b) - sortByDesc(a));
 
   iterateOverArrays(combinations, (assetAllocations) => {
     const allocation = tryCreateAllocation(assets, assetAllocations);
@@ -157,7 +157,6 @@ export const backTestAllocationCombinations = (
     }
 
     const result = backTestAllocation({
-      initialValue,
       allocation,
       changes,
       minAcceptableReturn,

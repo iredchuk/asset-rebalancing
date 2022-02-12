@@ -20,17 +20,14 @@ const main = async () => {
   const resultsLimit = parseInt(process.argv[4], 10);
   assert(resultsLimit > 0, "results limit not specified");
 
-  const initialValue = 1;
-
   console.log(`Testing across ${changes.length} changes...`);
 
   const bestResultsBySortinoRatio = backTestAllocationCombinations({
-    initialValue,
     allocationCombinations,
     changes,
     minAcceptableReturn: 0.04,
     resultsLimit,
-    compareByDesc: (result) => result.portfolioValue,
+    sortByDesc: (result) => result.totalReturn,
     filter: (result) => result.sortinoRatio >= 1,
   });
 
