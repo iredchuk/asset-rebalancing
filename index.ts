@@ -31,9 +31,8 @@ const main = async () => {
     filter: (result) => result.sortinoRatio >= 1,
   });
 
-  console.log("=== Best results ===");
+  console.log("Best Results:");
   console.log(formatResults(bestResultsBySortinoRatio));
-  console.log("=====");
 };
 
 main().catch(console.error);
