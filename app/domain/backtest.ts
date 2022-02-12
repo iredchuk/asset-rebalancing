@@ -12,6 +12,7 @@ import { sum } from "../utils/stat";
 
 export interface BackTestResult {
   totalReturn: number;
+  averageReturn: number;
   sortinoRatio: number;
   maxDrawdown: number;
   allocation: Allocation;
@@ -80,7 +81,7 @@ export const backTestAllocation = (
 
   const portfolioValue = getPortfolioValue(resultPortfolio);
 
-  const averagePeriodReturn = getAveragePeriodReturn(
+  const averageReturn = getAveragePeriodReturn(
     initialPortfolioValue,
     portfolioValue,
     changes.length
@@ -89,7 +90,7 @@ export const backTestAllocation = (
   const totalReturn = portfolioValue / initialPortfolioValue - 1;
 
   const sortinoRatio = getSortinoRatio(
-    averagePeriodReturn,
+    averageReturn,
     minAcceptableReturn,
     adjustedDrawdowns
   );
@@ -98,6 +99,7 @@ export const backTestAllocation = (
 
   return {
     totalReturn,
+    averageReturn,
     sortinoRatio,
     maxDrawdown,
     allocation: { ...allocation },
