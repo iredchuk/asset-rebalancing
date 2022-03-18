@@ -20,7 +20,6 @@ const formatOneResult = (result: BackTestResult) =>
   `
 Total return: ${formatPercentValue(result.totalReturn, 2)}
 Average return: ${formatPercentValue(result.averageReturn, 2)}
-Sortino Ratio: ${result.sortinoRatio.toFixed(2)}
 Max Drawdown: ${formatPercentValue(result.maxDrawdown, 2)}
 Allocation:
 ${formatAllocation(result.allocation)}

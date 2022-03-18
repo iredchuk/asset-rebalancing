@@ -13,7 +13,6 @@ import { sum } from "../utils/stat";
 export interface BackTestResult {
   totalReturn: number;
   averageReturn: number;
-  sortinoRatio: number;
   maxDrawdown: number;
   allocation: Allocation;
 }
@@ -21,18 +20,7 @@ export interface BackTestResult {
 export interface BacktestAllocationParams {
   allocation: Allocation;
   changes: Change[];
-  minAcceptableReturn: number;
 }
-
-const getRelativeNegativeReturn = (
-  portfolioValueBefore: number,
-  portfolioValueAfter: number,
-  minAcceptableReturn: number
-) => {
-  const adjustedReturn =
-    portfolioValueAfter / portfolioValueBefore - 1 - minAcceptableReturn;
-  return Math.abs(Math.min(adjustedReturn, 0));
-};
 
 const getAveragePeriodReturn = (
   initialPortfolioValue: number,
@@ -40,45 +28,21 @@ const getAveragePeriodReturn = (
   periodsCount: number
 ) => Math.pow(portfolioValue / initialPortfolioValue, 1 / periodsCount) - 1;
 
-const getSortinoRatio = (
-  averagePeriodReturn: number,
-  minAcceptableReturn: number,
-  negativeReturns: number[]
-) => {
-  const downsideDeviation = Math.sqrt(
-    sum(negativeReturns.map((d) => d * d)) / negativeReturns.length
-  );
-  return (
-    (averagePeriodReturn - minAcceptableReturn) /
-    Math.max(downsideDeviation, 0.001)
-  );
-};
-
 export const backTestAllocation = (
   params: BacktestAllocationParams
 ): BackTestResult => {
-  const { allocation, changes, minAcceptableReturn } = params;
+  const { allocation, changes } = params;
   const initialPortfolioValue = 1;
-  const negativeReturns: number[] = [];
   let lastHighValue = initialPortfolioValue;
   let maxDrawdown = 0;
 
   const resultPortfolio = changes.reduce((portfolio, change) => {
-    const initialPortfolioValue = getPortfolioValue(portfolio);
     const updatedPortfolio = rebalance(
       updatePortfolio(portfolio, change),
       allocation
     );
 
     const currentPortfolioValue = getPortfolioValue(updatedPortfolio);
-
-    negativeReturns.push(
-      getRelativeNegativeReturn(
-        initialPortfolioValue,
-        currentPortfolioValue,
-        minAcceptableReturn
-      )
-    );
 
     if (currentPortfolioValue > lastHighValue) {
       lastHighValue = currentPortfolioValue;
@@ -102,16 +66,9 @@ export const backTestAllocation = (
 
   const totalReturn = portfolioValue / initialPortfolioValue - 1;
 
-  const sortinoRatio = getSortinoRatio(
-    averageReturn,
-    minAcceptableReturn,
-    negativeReturns
-  );
-
   return {
     totalReturn,
     averageReturn,
-    sortinoRatio,
     maxDrawdown,
     allocation: { ...allocation },
   };
@@ -138,7 +95,6 @@ const tryCreateAllocation = (
 interface BacktestCombinationsParams {
   allocationCombinations: AllocationCombinations;
   changes: Change[];
-  minAcceptableReturn: number;
   resultsLimit: number;
   sortByDesc: (r: BackTestResult) => number;
   filter?: (r: BackTestResult) => boolean;
@@ -150,7 +106,6 @@ export const backTestAllocationCombinations = (
   const {
     allocationCombinations,
     changes,
-    minAcceptableReturn,
     resultsLimit,
     sortByDesc,
     filter,
@@ -172,7 +127,6 @@ export const backTestAllocationCombinations = (
     const result = backTestAllocation({
       allocation,
       changes,
-      minAcceptableReturn,
     });
 
     if (filter === undefined || filter(result)) {

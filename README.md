@@ -64,4 +64,4 @@ That is, from the input file from the example above, allocations under test will
 
 ## Customization
 
-By default backtesting outputs best results by maximal Portfolio Value adjusted by subtracting 50% of the maximal drawdown, with minumum acceptable return 4%. When needed, `index.ts` can be adjusted to use any other comparer, filter or MAR.
+By default backtesting outputs best results by maximal Portfolio Value adjusted by subtracting 50% of the maximal drawdown. When needed, `index.ts` can be adjusted to use any other comparer, filter or MAR.

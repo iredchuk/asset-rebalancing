@@ -24,7 +24,6 @@ const main = async () => {
   const bestResults = backTestAllocationCombinations({
     allocationCombinations,
     changes,
-    minAcceptableReturn: 0.04,
     resultsLimit,
     sortByDesc: (result) => result.totalReturn * (1 - 0.5 * result.maxDrawdown),
   });
