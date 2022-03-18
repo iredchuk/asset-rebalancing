@@ -3,20 +3,18 @@ import assert from "assert";
 export type DataRow = Record<string, number>;
 
 const parseDataRow = (
-  dataRow: Record<string, string>,
+  dataRow: Record<string, number>,
   keys: string[],
-  valueParser: (s: string) => number
 ): DataRow =>
   keys.reduce<DataRow>((result, key, index) => {
     assert(
       dataRow[key],
       `Key ${key} not found in a data row at index ${index}`
     );
-    return { ...result, [key]: valueParser(dataRow[key].trim()) };
+    return { ...result, [key]: dataRow[key] * 0.01 };
   }, {});
 
 export const parseData = (
-  dataRows: Record<string, string>[],
+  dataRows: Record<string, number>[],
   keys: string[],
-  valueParser: (s: string) => number
-): DataRow[] => dataRows.map((row) => parseDataRow(row, keys, valueParser));
+): DataRow[] => dataRows.map((row) => parseDataRow(row, keys));

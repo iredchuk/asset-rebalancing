@@ -1,7 +1,6 @@
 import assert from "assert";
-import { readCsv, readJson } from "./app/utils/file-reader";
-import { parseData } from "./app/utils/parse-data";
-import { parsePercentValue } from "./app/utils/value-parsers";
+import { readJson } from "./app/utils/file-reader";
+import { DataRow, parseData } from "./app/utils/parse-data";
 import {
   AllocationCombinations,
   backTestAllocationCombinations,
@@ -14,25 +13,24 @@ const main = async () => {
   const allocationCombinations = await readJson<AllocationCombinations>(
     process.argv[3]
   );
+  const dataRows = await readJson<DataRow[]>(process.argv[2]);
   const keys = Object.keys(allocationCombinations);
-  const dataRows = await readCsv(process.argv[2]);
-  const changes = parseData(dataRows, keys, parsePercentValue);
+  const changes = parseData(dataRows, keys);
   const resultsLimit = parseInt(process.argv[4], 10);
   assert(resultsLimit > 0, "results limit not specified");
 
   console.log(`Testing across ${changes.length} changes...`);
 
-  const bestResultsBySortinoRatio = backTestAllocationCombinations({
+  const bestResults = backTestAllocationCombinations({
     allocationCombinations,
     changes,
     minAcceptableReturn: 0.04,
     resultsLimit,
-    sortByDesc: (result) => result.totalReturn,
-    filter: (result) => result.sortinoRatio >= 1,
+    sortByDesc: (result) => result.totalReturn * (1 - 0.5 * result.maxDrawdown),
   });
 
   console.log("Best Results:");
-  console.log(formatResults(bestResultsBySortinoRatio));
+  console.log(formatResults(bestResults));
 };
 
 main().catch(console.error);

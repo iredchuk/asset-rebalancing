@@ -11,22 +11,33 @@ Node.js installed.
 ## Usage
 
 ```sh
-npm start ./data/<data-file>.csv ./data/<inputs-file>.json <resultsLimit>
+npm start ./data/<data-file>.json ./data/<backtest-combinations-file>.json <resultsLimit>
 ```
 
 ## Input files
 
-> Example of a CSV data file with historical yearly returns
+Example of a JSON data file with historical yearly returns.
+Each array element contains an object where key is an asset name and value is change of the asset's price value in percent.
 
-```csv
-year,stocks,bonds,gold
-1972,18.76%,11.41%,42.57%
-1973,-14.31%,4.32%,66.96%
-1974,-25.90%,-4.38%,63.47%
+```json
+[
+  {
+    "year": 1972,
+    "stocks": 18.76,
+    "bonds": 11.41,
+    "gold": 42.57
+  },
+  {
+    "year": 1973,
+    "stocks": -14.31,
+    "bonds": 4.32,
+    "gold": 66.96
+  },
+  // ...
+]
 ```
 
-> Example of backtest inputs JSON file that contains asset allocation combinations for every asset that will be used for backtesting
-
+Example of backtest inputs JSON file that contains asset allocation combinations for every asset that will be used for backtesting
 The key of each asset should be equal to the respective header in the Data file.
 
 ```json
