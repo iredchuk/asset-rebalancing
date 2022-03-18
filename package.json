@@ -24,13 +24,13 @@
   },
   "homepage": "https://github.com/iredchuk/asset-rebalancing#readme",
   "dependencies": {
-    "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "jest": "^27.4.7",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "ts-jest": "^27.1.3"
   }
 }
