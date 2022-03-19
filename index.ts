@@ -25,7 +25,7 @@ const main = async () => {
     allocationCombinations,
     changes,
     resultsLimit,
-    sortByDesc: (result) => result.totalReturn * (1 - 0.5 * result.maxDrawdown),
+    sortByDesc: (result) => result.totalReturn * (1 - result.maxDrawdown),
   });
 
   console.log("Best Results:");
