@@ -6,12 +6,22 @@ import {
   backTestAllocationCombinations,
 } from "./app/domain/backtest";
 import { formatResults } from "./app/domain/format-results";
+import { createArrayFromLimits, Limits } from "./app/utils/arrays";
 
 const main = async () => {
   console.log("Parsing input files...");
 
-  const allocationCombinations = await readJson<AllocationCombinations>(
+  const allocationLimits = await readJson<Record<string, Limits>>(
     process.argv[3]
+  );
+  const allocationCombinations = Object.entries(
+    allocationLimits
+  ).reduce<AllocationCombinations>(
+    (result, [asset, limits]) => ({
+      ...result,
+      [asset]: createArrayFromLimits(limits),
+    }),
+    {}
   );
   const dataRows = await readJson<DataRow[]>(process.argv[2]);
   const keys = Object.keys(allocationCombinations);

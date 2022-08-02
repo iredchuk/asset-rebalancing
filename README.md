@@ -32,19 +32,19 @@ Each array element contains an object where key is an asset name and value is ch
     "stocks": -14.31,
     "bonds": 4.32,
     "gold": 66.96
-  },
+  }
   // ...
 ]
 ```
 
-Example of backtest inputs JSON file that contains asset allocation combinations for every asset that will be used for backtesting
+Example of backtest inputs JSON file that contains limits of asset allocations for every asset that will be used for backtesting.
 The key of each asset should be equal to the respective header in the Data file.
 
 ```json
 {
-  "stocks": [0.5, 0.7, 1],
-  "bonds": [0, 0.3, 0.5],
-  "gold": [0, 0.3, 0.5]
+  "stocks": { "min": 0.5, "max": 1, "step": 0.1 },
+  "bonds": { "min": 0, "max": 0.5, "step": 0.1 },
+  "gold": { "min": 0.2, "max": 0.8, "step": 0.1 }
 }
 ```
 
