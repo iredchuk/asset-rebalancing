@@ -9,7 +9,7 @@ const parseDataRow = (
   keys.reduce<DataRow>((result, key, index) => {
     assert(
       dataRow[key],
-      `Key ${key} not found in a data row at index ${index}`
+      `Key ${key} not found in a data row at index ${index}`,
     );
     return { ...result, [key]: dataRow[key] * 0.01 };
   }, {});

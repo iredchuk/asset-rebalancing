@@ -12,16 +12,16 @@ const main = async () => {
   console.log("Parsing input files...");
 
   const allocationLimits = await readJson<Record<string, Limits>>(
-    process.argv[3]
+    process.argv[3],
   );
   const allocationCombinations = Object.entries(
-    allocationLimits
+    allocationLimits,
   ).reduce<AllocationCombinations>(
     (result, [asset, limits]) => ({
       ...result,
       [asset]: createArrayFromLimits(limits),
     }),
-    {}
+    {},
   );
   const dataRows = await readJson<DataRow[]>(process.argv[2]);
   const keys = Object.keys(allocationCombinations);

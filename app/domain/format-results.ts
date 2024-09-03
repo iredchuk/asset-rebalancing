@@ -12,7 +12,7 @@ const formatAllocation = (allocation: Allocation): string =>
         ...result,
         `  ${asset}: ${formatPercentValue(value, 0)}`,
       ],
-      []
+      [],
     )
     .join(EOL);
 

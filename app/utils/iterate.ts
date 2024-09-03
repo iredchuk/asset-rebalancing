@@ -19,7 +19,7 @@ const pickItems = <T>(arrays: T[][], combination: number): T[] => {
 
 export const iterateOverArrays = <T>(
   arrays: T[][],
-  action: (items: T[]) => void
+  action: (items: T[]) => void,
 ) => {
   const combinations = product(arrays.map((a) => a.length || 1));
   for (let c = 0; c < combinations; c += 1) {

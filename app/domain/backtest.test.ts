@@ -214,22 +214,22 @@ describe("backtest", () => {
       expect(actual[1].averageReturn).toBeCloseTo(0.127, 3);
       expect(actual[1].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[1].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.cash
+        actual[1].allocation!.cash,
       );
 
       expect(actual[2].totalReturn).toBeCloseTo(0.254, 3);
       expect(actual[2].averageReturn).toBeCloseTo(0.058, 3);
       expect(actual[2].maxDrawdown).toBeCloseTo(0.1, 4);
       expect(actual[2].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.cash
+        actual[1].allocation!.cash,
       );
 
       expect(actual[0].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.stocks
+        actual[1].allocation!.stocks,
       );
 
       expect(actual[1].allocation!.stocks).toBeGreaterThan(
-        actual[2].allocation!.stocks
+        actual[2].allocation!.stocks,
       );
     });
 

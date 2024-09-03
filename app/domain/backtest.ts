@@ -1,3 +1,5 @@
+import { iterateOverArrays } from "../utils/iterate";
+import { sum } from "../utils/stat";
 import {
   Allocation,
   Change,
@@ -7,8 +9,6 @@ import {
   rebalance,
   updatePortfolio,
 } from "./portfolio";
-import { iterateOverArrays } from "../utils/iterate";
-import { sum } from "../utils/stat";
 
 export interface BackTestResult {
   totalReturn: number;
@@ -25,43 +25,46 @@ export interface BacktestAllocationParams {
 const getAveragePeriodReturn = (
   initialPortfolioValue: number,
   portfolioValue: number,
-  periodsCount: number
+  periodsCount: number,
 ) => Math.pow(portfolioValue / initialPortfolioValue, 1 / periodsCount) - 1;
 
 export const backTestAllocation = (
-  params: BacktestAllocationParams
+  params: BacktestAllocationParams,
 ): BackTestResult => {
   const { allocation, changes } = params;
   const initialPortfolioValue = 1;
   let lastHighValue = initialPortfolioValue;
   let maxDrawdown = 0;
 
-  const resultPortfolio = changes.reduce((portfolio, change) => {
-    const updatedPortfolio = rebalance(
-      updatePortfolio(portfolio, change),
-      allocation
-    );
+  const resultPortfolio = changes.reduce(
+    (portfolio, change) => {
+      const updatedPortfolio = rebalance(
+        updatePortfolio(portfolio, change),
+        allocation,
+      );
 
-    const currentPortfolioValue = getPortfolioValue(updatedPortfolio);
+      const currentPortfolioValue = getPortfolioValue(updatedPortfolio);
 
-    if (currentPortfolioValue > lastHighValue) {
-      lastHighValue = currentPortfolioValue;
-    } else {
-      const drawdown = 1 - currentPortfolioValue / lastHighValue;
-      if (drawdown > maxDrawdown) {
-        maxDrawdown = drawdown;
+      if (currentPortfolioValue > lastHighValue) {
+        lastHighValue = currentPortfolioValue;
+      } else {
+        const drawdown = 1 - currentPortfolioValue / lastHighValue;
+        if (drawdown > maxDrawdown) {
+          maxDrawdown = drawdown;
+        }
       }
-    }
 
-    return updatedPortfolio;
-  }, createPortfolio(initialPortfolioValue, allocation));
+      return updatedPortfolio;
+    },
+    createPortfolio(initialPortfolioValue, allocation),
+  );
 
   const portfolioValue = getPortfolioValue(resultPortfolio);
 
   const averageReturn = getAveragePeriodReturn(
     initialPortfolioValue,
     portfolioValue,
-    changes.length
+    changes.length,
   );
 
   const totalReturn = portfolioValue / initialPortfolioValue - 1;
@@ -78,11 +81,11 @@ export type AllocationCombinations = Record<string, number[]>;
 
 const tryCreateAllocation = (
   assets: string[],
-  assetAllocations: number[]
+  assetAllocations: number[],
 ): Allocation | undefined => {
   const allocation = assets.reduce<Record<string, number>>(
     (result, asset, i) => ({ ...result, [asset]: assetAllocations[i] }),
-    {}
+    {},
   );
 
   if (Math.abs(sum(Object.values(allocation)) - 1) >= 0.01) {
@@ -101,15 +104,10 @@ interface BacktestCombinationsParams {
 }
 
 export const backTestAllocationCombinations = (
-  params: BacktestCombinationsParams
+  params: BacktestCombinationsParams,
 ): BackTestResult[] => {
-  const {
-    allocationCombinations,
-    changes,
-    resultsLimit,
-    sortByDesc,
-    filter,
-  } = params;
+  const { allocationCombinations, changes, resultsLimit, sortByDesc, filter } =
+    params;
 
   let bestResults: BackTestResult[] = [];
   const combinations = Object.values(allocationCombinations);
