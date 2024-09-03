@@ -43,7 +43,7 @@ describe("portfolio", () => {
           gold: 0.65,
           silver: 0.25,
           platinum: 0.1,
-        })
+        }),
       );
 
       expect(actual).toEqual({
@@ -62,7 +62,7 @@ describe("portfolio", () => {
           gold: 0.65,
           silver: 0.25,
           platinum: 0.1,
-        })
+        }),
       );
 
       const actual = getPortfolioValue(portfolio);
@@ -79,7 +79,7 @@ describe("portfolio", () => {
           gold: 0.5,
           silver: 0.3,
           platinum: 0.2,
-        })
+        }),
       );
 
       const change = {
@@ -108,7 +108,7 @@ describe("portfolio", () => {
           gold: 0.5,
           silver: 0.3,
           platinum: 0.2,
-        })
+        }),
       );
 
       const change = {
@@ -139,7 +139,7 @@ describe("portfolio", () => {
           cash: 0.5,
           gold: 0.3,
           silver: 0.2,
-        })
+        }),
       );
 
       const allocation = createAllocation({
