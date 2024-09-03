@@ -5,7 +5,7 @@
   "description": "asset allocation rebalancing backtester",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index",
+    "start": "tsx index",
     "test": "jest --watch",
     "test:ci": "jest --ci"
   },
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/iredchuk/asset-rebalancing#readme",
   "dependencies": {
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
     "typescript": "^5.5.4"
   },
   "devDependencies": {
