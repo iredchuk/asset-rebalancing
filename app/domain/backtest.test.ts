@@ -1,3 +1,6 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
+import { roundToDecimals } from "../utils/test-utils";
 import { backTestAllocation, backTestAllocationCombinations } from "./backtest";
 import { createAllocation } from "./portfolio";
 
@@ -21,17 +24,11 @@ describe("backtest", () => {
         changes,
       });
 
-      expect(actual).toStrictEqual({
-        totalReturn: expect.any(Number),
-        averageReturn: expect.any(Number),
-        maxDrawdown: expect.any(Number),
-        allocation: expect.any(Object),
-      });
+      assert.equal(roundToDecimals(actual.totalReturn, 3), 0.404);
+      assert.equal(roundToDecimals(actual.averageReturn, 4), 0.0885);
+      assert.equal(roundToDecimals(actual.maxDrawdown, 4), 0.2);
 
-      expect(actual.totalReturn).toBeCloseTo(0.404, 3);
-      expect(actual.averageReturn).toBeCloseTo(0.0885, 4);
-      expect(actual.maxDrawdown).toBeCloseTo(0.2, 4);
-      expect(actual.allocation).toEqual(allocation);
+      assert.deepEqual(actual.allocation, allocation);
     });
 
     test("with multiple assets", () => {
@@ -52,17 +49,11 @@ describe("backtest", () => {
         changes,
       });
 
-      expect(actual).toStrictEqual({
-        totalReturn: expect.any(Number),
-        averageReturn: expect.any(Number),
-        maxDrawdown: expect.any(Number),
-        allocation: expect.any(Object),
-      });
+      assert.equal(roundToDecimals(actual.totalReturn, 3), 0.403);
+      assert.equal(roundToDecimals(actual.averageReturn, 4), 0.1195);
+      assert.equal(roundToDecimals(actual.maxDrawdown, 4), 0.04);
 
-      expect(actual.totalReturn).toBeCloseTo(0.403, 3);
-      expect(actual.averageReturn).toBeCloseTo(0.1195, 4);
-      expect(actual.maxDrawdown).toBeCloseTo(0.04, 4);
-      expect(actual.allocation).toEqual(allocation);
+      assert.deepEqual(actual.allocation, allocation);
     });
 
     test("with losing portfolio and zero drawdown deviation", () => {
@@ -83,17 +74,11 @@ describe("backtest", () => {
         changes,
       });
 
-      expect(actual).toStrictEqual({
-        totalReturn: expect.any(Number),
-        averageReturn: expect.any(Number),
-        maxDrawdown: expect.any(Number),
-        allocation: expect.any(Object),
-      });
+      assert.equal(roundToDecimals(actual.totalReturn, 3), -0.185);
+      assert.equal(roundToDecimals(actual.averageReturn, 3), -0.05);
+      assert.equal(roundToDecimals(actual.maxDrawdown, 4), 0.1855);
 
-      expect(actual.totalReturn).toBeCloseTo(-0.185, 3);
-      expect(actual.averageReturn).toBeCloseTo(-0.05, 4);
-      expect(actual.maxDrawdown).toBeCloseTo(0.1855, 4);
-      expect(actual.allocation).toEqual(allocation);
+      assert.deepEqual(actual.allocation, allocation);
     });
   });
 
@@ -130,19 +115,13 @@ describe("backtest", () => {
         sortByDesc: (r) => r.totalReturn,
       });
 
-      expect(actual).toStrictEqual([
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-      ]);
+      assert.equal(actual.length, 1);
 
-      expect(actual[0].totalReturn).toBeCloseTo(0.242, 3);
-      expect(actual[0].averageReturn).toBeCloseTo(0.0749, 4);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 4);
-      expect(actual[0].allocation).toEqual({
+      assert.equal(roundToDecimals(actual[0].totalReturn, 3), 0.242);
+      assert.equal(roundToDecimals(actual[0].averageReturn, 4), 0.0749);
+      assert.equal(roundToDecimals(actual[0].maxDrawdown, 4), 0.1);
+
+      assert.deepEqual(actual[0].allocation, {
         stocks: 0.5,
         bonds: 0.5,
         cash: 0,
@@ -181,56 +160,30 @@ describe("backtest", () => {
         sortByDesc: (r) => r.totalReturn,
       });
 
-      expect(actual).toStrictEqual([
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-      ]);
+      assert.equal(actual.length, 3);
 
-      expect(actual[0].totalReturn).toBeCloseTo(0.871, 3);
-      expect(actual[0].averageReturn).toBeCloseTo(0.17, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.1, 4);
-      expect(actual[0].allocation).toEqual({
+      assert.equal(roundToDecimals(actual[0].totalReturn, 3), 0.871);
+      assert.equal(roundToDecimals(actual[0].averageReturn, 3), 0.17);
+      assert.equal(roundToDecimals(actual[0].maxDrawdown, 4), 0.1);
+
+      assert.deepEqual(actual[0].allocation, {
         stocks: 1,
         cash: 0,
       });
 
-      expect(actual[1].totalReturn).toBeCloseTo(0.615, 3);
-      expect(actual[1].averageReturn).toBeCloseTo(0.127, 3);
-      expect(actual[1].maxDrawdown).toBeCloseTo(0.1, 4);
-      expect(actual[1].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.cash,
-      );
+      assert.equal(roundToDecimals(actual[1].totalReturn, 3), 0.615);
+      assert.equal(roundToDecimals(actual[1].averageReturn, 3), 0.127);
+      assert.equal(roundToDecimals(actual[1].maxDrawdown, 4), 0.1);
 
-      expect(actual[2].totalReturn).toBeCloseTo(0.254, 3);
-      expect(actual[2].averageReturn).toBeCloseTo(0.058, 3);
-      expect(actual[2].maxDrawdown).toBeCloseTo(0.1, 4);
-      expect(actual[2].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.cash,
-      );
+      assert(actual[1].allocation!.stocks! > actual[1].allocation!.cash!);
 
-      expect(actual[0].allocation!.stocks).toBeGreaterThan(
-        actual[1].allocation!.stocks,
-      );
+      assert.equal(roundToDecimals(actual[2].totalReturn, 3), 0.254);
+      assert.equal(roundToDecimals(actual[2].averageReturn, 3), 0.058);
+      assert.equal(roundToDecimals(actual[2].maxDrawdown, 4), 0.1);
 
-      expect(actual[1].allocation!.stocks).toBeGreaterThan(
-        actual[2].allocation!.stocks,
-      );
+      assert(actual[1].allocation!.stocks! > actual[1].allocation!.cash!);
+      assert(actual[0].allocation!.stocks! > actual[1].allocation!.cash!);
+      assert(actual[1].allocation!.stocks! > actual[2].allocation!.cash!);
     });
 
     test("with almost equal assets and 2 results by total return", () => {
@@ -261,33 +214,22 @@ describe("backtest", () => {
         sortByDesc: (r) => r.totalReturn,
       });
 
-      expect(actual).toStrictEqual([
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-      ]);
+      assert.equal(actual.length, 2);
 
-      expect(actual[0].totalReturn).toBeCloseTo(0.088, 3);
-      expect(actual[0].averageReturn).toBeCloseTo(0.028, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.0975, 4);
-      expect(actual[0].allocation).toEqual({
+      assert.equal(roundToDecimals(actual[0].totalReturn, 3), 0.088);
+      assert.equal(roundToDecimals(actual[0].averageReturn, 3), 0.028);
+      assert.equal(roundToDecimals(actual[0].maxDrawdown, 4), 0.0975);
+
+      assert.deepEqual(actual[0].allocation, {
         bonds: 0.5,
         gold: 0.5,
       });
 
-      expect(actual[1].totalReturn).toBeCloseTo(-0.153, 3);
-      expect(actual[1].averageReturn).toBeCloseTo(-0.054, 3);
-      expect(actual[1].maxDrawdown).toBeCloseTo(0.5, 4);
-      expect(actual[1].allocation).toEqual({
+      assert.equal(roundToDecimals(actual[1].totalReturn, 3), -0.153);
+      assert.equal(roundToDecimals(actual[1].averageReturn, 3), -0.054);
+      assert.equal(roundToDecimals(actual[1].maxDrawdown, 4), 0.5);
+
+      assert.deepEqual(actual[1].allocation, {
         bonds: 0,
         gold: 1,
       });
@@ -326,21 +268,13 @@ describe("backtest", () => {
         filter: (r) => r.maxDrawdown < 0.03,
       });
 
-      expect(actual).toHaveLength(1);
+      assert.equal(actual.length, 1);
 
-      expect(actual).toStrictEqual([
-        {
-          totalReturn: expect.any(Number),
-          averageReturn: expect.any(Number),
-          maxDrawdown: expect.any(Number),
-          allocation: expect.any(Object),
-        },
-      ]);
+      assert.equal(roundToDecimals(actual[0].totalReturn, 3), 0.227);
+      assert.equal(roundToDecimals(actual[0].averageReturn, 3), 0.071);
+      assert.equal(roundToDecimals(actual[0].maxDrawdown, 4), 0.02);
 
-      expect(actual[0].totalReturn).toBeCloseTo(0.227, 3);
-      expect(actual[0].averageReturn).toBeCloseTo(0.071, 3);
-      expect(actual[0].maxDrawdown).toBeCloseTo(0.02, 4);
-      expect(actual[0].allocation).toEqual({
+      assert.deepEqual(actual[0].allocation, {
         stocks: 0.3,
         bonds: 0.7,
         cash: 0,

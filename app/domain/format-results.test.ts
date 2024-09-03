@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import { BackTestResult } from "./backtest";
 import { formatResults } from "./format-results";
 
@@ -28,7 +30,9 @@ describe("format-results", () => {
 
     const actual = formatResults(results);
 
-    expect(actual).toEqual(`
+    assert.equal(
+      actual,
+      `
 Total return: 25.50%
 Average return: 5.12%
 Max Drawdown: 13.70%
@@ -45,6 +49,7 @@ Allocation:
   gold: 65%
   silver: 35%
   platinum: 0%
-`);
+`,
+    );
   });
 });

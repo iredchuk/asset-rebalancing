@@ -1,53 +1,55 @@
-import { product, sum, avg } from "./stat";
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
+import { avg, product, sum } from "./stat";
 
 describe("stat", () => {
   describe("sum", () => {
     test("empty array", () => {
       const actual = sum([]);
-      expect(actual).toBe(0);
+      assert.equal(actual, 0);
     });
 
     test("one item array", () => {
       const actual = sum([17]);
-      expect(actual).toBe(17);
+      assert.equal(actual, 17);
     });
 
     test("several items array", () => {
       const actual = sum([-1, 2, 0, 1.5]);
-      expect(actual).toBeCloseTo(2.5, 0);
+      assert.equal(actual, 2.5);
     });
   });
 
   describe("product", () => {
     test("empty array", () => {
       const actual = product([]);
-      expect(actual).toBe(1);
+      assert.equal(actual, 1);
     });
 
     test("one item array", () => {
       const actual = product([100]);
-      expect(actual).toBe(100);
+      assert.equal(actual, 100);
     });
 
     test("several items array", () => {
       const actual = product([0.5, -1, -2, 3, -2.5]);
-      expect(actual).toBeCloseTo(-7.5, 0);
+      assert.equal(actual, -7.5);
     });
   });
 
   describe("avg", () => {
     test("empty array - throws", () => {
-      expect(() => avg([])).toThrow();
+      assert.throws(() => avg([]));
     });
 
     test("one item array", () => {
       const actual = avg([-31]);
-      expect(actual).toBe(-31);
+      assert.equal(actual, -31);
     });
 
     test("several items array", () => {
       const actual = avg([1, -10, 17, 4]);
-      expect(actual).toBeCloseTo(3, 0);
+      assert.equal(actual, 3);
     });
   });
 });
