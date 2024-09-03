@@ -1,3 +1,6 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
+
 import { parseData } from "./parse-data";
 
 describe("parse-data", () => {
@@ -18,7 +21,7 @@ describe("parse-data", () => {
       ["keyA", "keyB"],
     );
 
-    expect(actual).toEqual([
+    assert.deepEqual(actual, [
       { keyA: 0.1, keyB: 0.11 },
       { keyA: 0.2, keyB: 0.21 },
     ]);

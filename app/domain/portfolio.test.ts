@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import {
   createAllocation,
   createPortfolio,
@@ -11,7 +13,7 @@ describe("portfolio", () => {
     test("with normalized values", () => {
       const actual = createAllocation({ stocks: 0.5, bonds: 0.2, cash: 0.3 });
 
-      expect(actual).toEqual({
+      assert.deepEqual(actual, {
         stocks: 0.5,
         bonds: 0.2,
         cash: 0.3,
@@ -26,7 +28,7 @@ describe("portfolio", () => {
         nothing: 0,
       });
 
-      expect(actual).toEqual({
+      assert.deepEqual(actual, {
         stocks: 0.4,
         bonds: 0.25,
         cash: 0.35,
@@ -46,7 +48,7 @@ describe("portfolio", () => {
         }),
       );
 
-      expect(actual).toEqual({
+      assert.deepEqual(actual, {
         gold: 650,
         silver: 250,
         platinum: 100,
@@ -67,7 +69,7 @@ describe("portfolio", () => {
 
       const actual = getPortfolioValue(portfolio);
 
-      expect(actual).toBe(1200);
+      assert.equal(actual, 1200);
     });
   });
 
@@ -90,15 +92,15 @@ describe("portfolio", () => {
 
       const actual = updatePortfolio(portfolio, change);
 
-      expect(actual).not.toBe(portfolio);
+      assert.notEqual(portfolio, actual);
 
-      expect(actual).toEqual({
+      assert.deepEqual(actual, {
         gold: 650,
         silver: 300,
         platinum: 160,
       });
 
-      expect(getPortfolioValue(actual)).toBe(1110);
+      assert.equal(getPortfolioValue(actual), 1110);
     });
 
     test("when some changes not specified and some non-related changes", () => {
@@ -119,15 +121,15 @@ describe("portfolio", () => {
 
       const actual = updatePortfolio(portfolio, change);
 
-      expect(actual).not.toBe(portfolio);
+      assert.notEqual(portfolio, actual);
 
-      expect(actual).toEqual({
+      assert.deepEqual(actual, {
         gold: 650,
         silver: 300,
         platinum: 160,
       });
 
-      expect(getPortfolioValue(actual)).toBe(1110);
+      assert.equal(getPortfolioValue(actual), 1110);
     });
   });
 
@@ -150,13 +152,10 @@ describe("portfolio", () => {
 
       const actual = rebalance(portfolio, allocation);
 
-      expect(actual).not.toBe(portfolio);
-
-      expect(getPortfolioValue(actual)).toBe(1000);
-
-      expect(actual["gold"] / actual["silver"]).toBe(2);
-
-      expect(actual["gold"] / actual["cash"]).toBe(6);
+      assert.notEqual(portfolio, actual);
+      assert.equal(getPortfolioValue(actual), 1000);
+      assert.equal(actual["gold"] / actual["silver"], 2);
+      assert.equal(actual["gold"] / actual["cash"], 6);
     });
   });
 });

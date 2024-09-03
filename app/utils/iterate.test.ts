@@ -1,3 +1,5 @@
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import { iterateOverArrays } from "./iterate";
 
 describe("iterateOverArrays", () => {
@@ -8,7 +10,7 @@ describe("iterateOverArrays", () => {
 
     iterateOverArrays(arrays, (items) => visited.push(items[0]));
 
-    expect(visited).toEqual(["1", "2", "3"]);
+    assert.deepEqual(visited, ["1", "2", "3"]);
   });
 
   test("with two arrays", () => {
@@ -21,7 +23,7 @@ describe("iterateOverArrays", () => {
 
     iterateOverArrays(arrays, (items) => visited.push(items.join("")));
 
-    expect(visited).toEqual(["1A", "2A", "3A", "4A", "1B", "2B", "3B", "4B"]);
+    assert.deepEqual(visited, ["1A", "2A", "3A", "4A", "1B", "2B", "3B", "4B"]);
   });
 
   test("with multiple arrays of different length", () => {
@@ -31,7 +33,7 @@ describe("iterateOverArrays", () => {
 
     iterateOverArrays(arrays, (items) => visited.push(items.join("")));
 
-    expect(visited).toEqual([
+    assert.deepEqual(visited, [
       "1A-x",
       "2A-x",
       "3A-x",
@@ -54,6 +56,6 @@ describe("iterateOverArrays", () => {
 
     iterateOverArrays(arrays, (items) => visited.push(items.join("")));
 
-    expect(visited).toEqual(["1A", "2A", "1B", "2B"]);
+    assert.deepEqual(visited, ["1A", "2A", "1B", "2B"]);
   });
 });
