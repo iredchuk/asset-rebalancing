@@ -8,8 +8,8 @@ const parseDataRow = (
 ): DataRow =>
   keys.reduce<DataRow>((result, key, index) => {
     assert(
-      dataRow[key],
-      `Key ${key} not found in a data row at index ${index}`,
+      dataRow[key] !== undefined,
+      `Key ${key} not found in a data row at index ${index} (${JSON.stringify(dataRow)})`,
     );
     return { ...result, [key]: dataRow[key] * 0.01 };
   }, {});

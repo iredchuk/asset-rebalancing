@@ -33,8 +33,8 @@ describe("format-results", () => {
     assert.equal(
       actual,
       `
-Total return: 25.50%
-Average return: 5.12%
+Total Return: 25.50%
+Average Return: 5.12%
 Max Drawdown: 13.70%
 Allocation:
   gold: 72%
@@ -42,8 +42,8 @@ Allocation:
   platinum: 10%
 
 
-Total return: 14.70%
-Average return: 4.33%
+Total Return: 14.70%
+Average Return: 4.33%
 Max Drawdown: 14.05%
 Allocation:
   gold: 65%

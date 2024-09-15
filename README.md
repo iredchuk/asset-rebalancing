@@ -62,4 +62,4 @@ That is, from the input file from the example above, allocations under test will
 
 ## Customization
 
-By default backtesting outputs best results by the goemetric mean of total return and total return adjusted by subtracting maximal drawdown. When needed, `index.ts` can be adjusted to use any other comparer or filter.
+By default backtesting outputs best results by the goemetric mean of total return and total return adjusted by subtracting maximal drawdown. When needed, `index.ts` can be adjusted to use any other comparer or filter (use `sortByDesc` and `filter` parameters of `backTestAllocationCombinations` function).

@@ -18,8 +18,8 @@ const formatAllocation = (allocation: Allocation): string =>
 
 const formatOneResult = (result: BackTestResult) =>
   `
-Total return: ${formatPercentValue(result.totalReturn, 2)}
-Average return: ${formatPercentValue(result.averageReturn, 2)}
+Total Return: ${formatPercentValue(result.totalReturn, 2)}
+Average Return: ${formatPercentValue(result.averageReturn, 2)}
 Max Drawdown: ${formatPercentValue(result.maxDrawdown, 2)}
 Allocation:
 ${formatAllocation(result.allocation)}
