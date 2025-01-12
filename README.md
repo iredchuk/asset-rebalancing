@@ -55,6 +55,7 @@ Example of the params file:
 {
   "sortBy": "Return",
   "resultsLimit": 10,
+  "minimalAcceptableReturn": 0.3,
   "allocationLimits": {
     "stocks": { "min": 0.5, "max": 1, "step": 0.1 },
     "bonds": { "min": 0.1, "max": 0.5, "step": 0.1 },
