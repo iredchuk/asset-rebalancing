@@ -95,19 +95,17 @@ const tryCreateAllocation = (
   return createAllocation(allocation);
 };
 
-interface BacktestCombinationsParams {
+export interface BacktestParams {
   allocationCombinations: AllocationCombinations;
   changes: Change[];
   resultsLimit: number;
   sortByDesc: (r: BackTestResult) => number;
-  filter?: (r: BackTestResult) => boolean;
 }
 
 export const backTestAllocationCombinations = (
-  params: BacktestCombinationsParams,
+  params: BacktestParams,
 ): BackTestResult[] => {
-  const { allocationCombinations, changes, resultsLimit, sortByDesc, filter } =
-    params;
+  const { allocationCombinations, changes, resultsLimit, sortByDesc } = params;
 
   let bestResults: BackTestResult[] = [];
   const combinations = Object.values(allocationCombinations);
@@ -127,11 +125,9 @@ export const backTestAllocationCombinations = (
       changes,
     });
 
-    if (filter === undefined || filter(result)) {
-      bestResults.push(result);
-      bestResults.sort(compareResults);
-      bestResults.splice(resultsLimit);
-    }
+    bestResults.push(result);
+    bestResults.sort(compareResults);
+    bestResults.splice(resultsLimit);
   });
 
   return bestResults;

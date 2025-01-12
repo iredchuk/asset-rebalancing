@@ -234,51 +234,5 @@ describe("backtest", () => {
         gold: 1,
       });
     });
-
-    test("with filter by max. drawdown and sort by total return", () => {
-      const allocationCombinations = {
-        stocks: [0, 0.3, 0.5, 0.7, 1],
-        bonds: [0, 0.3, 0.5, 0.7, 1],
-        cash: [0, 0.1, 0.2, 0.3],
-      };
-
-      const changes = [
-        {
-          stocks: 0.5,
-          bonds: -0.2,
-          cash: -0.1,
-        },
-        {
-          stocks: -0.3,
-          bonds: 0.1,
-          cash: 0,
-        },
-        {
-          stocks: 0.1,
-          bonds: 0.3,
-          cash: -0.1,
-        },
-      ];
-
-      const actual = backTestAllocationCombinations({
-        allocationCombinations,
-        changes,
-        resultsLimit: 2,
-        sortByDesc: (r) => r.totalReturn,
-        filter: (r) => r.maxDrawdown < 0.03,
-      });
-
-      assert.equal(actual.length, 1);
-
-      assert.equal(roundToDecimals(actual[0].totalReturn, 3), 0.227);
-      assert.equal(roundToDecimals(actual[0].averageReturn, 3), 0.071);
-      assert.equal(roundToDecimals(actual[0].maxDrawdown, 4), 0.02);
-
-      assert.deepEqual(actual[0].allocation, {
-        stocks: 0.3,
-        bonds: 0.7,
-        cash: 0,
-      });
-    });
   });
 });
