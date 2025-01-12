@@ -9,7 +9,7 @@
     "test": "tsx --test app/domain/*.test.ts app/utils/*.test.ts"
   },
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "repository": {
@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/iredchuk/asset-rebalancing#readme",
   "dependencies": {
-    "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   },
   "devDependencies": {
-    "@types/node": "^22.5.5",
-    "prettier": "^3.3.3"
+    "@types/node": "^22.10.5",
+    "prettier": "^3.4.2"
   }
 }
