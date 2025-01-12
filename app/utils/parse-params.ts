@@ -11,6 +11,7 @@ export type DataRow = Record<string, unknown>;
 export interface ParamsFile {
   sortBy: "Return" | "MaxDrawdown" | "Sortino";
   resultsLimit: number;
+  minimalAcceptableReturn: number;
   allocationLimits: Record<string, Limits>;
 }
 
@@ -49,7 +50,7 @@ const getSortByDescFn = (sortBy: string) => {
     case "MaxDrawdown":
       return (result: BackTestResult) => -result.maxDrawdown;
     case "Sortino":
-      throw new Error("Sortino ratio is not supported yet");
+      return (result: BackTestResult) => result.sortinoRatio;
     default:
       throw new Error("Invalid sortBy parameter");
   }
@@ -66,11 +67,17 @@ export const createBackTestParams = (
 
   assert(params, "Params file is not specified or invalid");
 
-  const { sortBy, resultsLimit, allocationLimits } = params;
+  const { sortBy, resultsLimit, minimalAcceptableReturn, allocationLimits } =
+    params;
 
   assert(
     Number(resultsLimit) && resultsLimit > 0,
-    "results limit not specified or invalid",
+    "resultsLimit not specified or invalid",
+  );
+
+  assert(
+    Number(minimalAcceptableReturn) && minimalAcceptableReturn >= 0,
+    "minimalAcceptableReturn not specified or invalid",
   );
 
   assert(
@@ -96,6 +103,7 @@ export const createBackTestParams = (
     allocationCombinations,
     changes,
     resultsLimit,
+    minimalAcceptableReturn,
     sortByDesc: getSortByDescFn(sortBy),
   };
 };

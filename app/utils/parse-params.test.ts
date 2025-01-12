@@ -29,6 +29,7 @@ describe("parse-params", () => {
     const params: ParamsFile = {
       sortBy: "Return",
       resultsLimit: 5,
+      minimalAcceptableReturn: 0.1,
       allocationLimits: {
         assetA: { min: 0, max: 0.5, step: 0.1 },
         assetB: { min: 0.5, max: 1, step: 0.2 },
@@ -40,19 +41,22 @@ describe("parse-params", () => {
 
     assert(actual);
 
+    assert.deepEqual(Object.keys(actual), [
+      "allocationCombinations",
+      "changes",
+      "resultsLimit",
+      "minimalAcceptableReturn",
+      "sortByDesc",
+    ]);
+
     assert.equal(actual.resultsLimit, 5);
+
+    assert.equal(actual.minimalAcceptableReturn, 0.1);
 
     assert.equal(
       actual.sortByDesc({ averageReturn: 120 } as BackTestResult),
       120,
     );
-
-    assert.deepEqual(Object.keys(actual), [
-      "allocationCombinations",
-      "changes",
-      "resultsLimit",
-      "sortByDesc",
-    ]);
 
     assert.deepEqual(actual.allocationCombinations, {
       assetA: [0, 0.1, 0.2, 0.3, 0.4, 0.5],

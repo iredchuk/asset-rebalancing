@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import { avg, product, sum } from "./stat";
+import { avg, product, rootMeanSquare, sum } from "./stat";
+import { roundToDecimals } from "./test-utils";
 
 describe("stat", () => {
   describe("sum", () => {
@@ -50,6 +51,22 @@ describe("stat", () => {
     test("several items array", () => {
       const actual = avg([1, -10, 17, 4]);
       assert.equal(actual, 3);
+    });
+  });
+
+  describe("rootMeanSquare", () => {
+    test("empty array - throws", () => {
+      assert.throws(() => rootMeanSquare([]));
+    });
+
+    test("one item array", () => {
+      const actual = rootMeanSquare([17]);
+      assert.equal(actual, 17);
+    });
+
+    test("several items array", () => {
+      const actual = rootMeanSquare([4, 0, 3, 7]);
+      assert.equal(roundToDecimals(actual, 4), 4.3012);
     });
   });
 });

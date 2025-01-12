@@ -45,6 +45,8 @@ Params file contains several options:
 
 - `resultsLimit` - a number that defines the amount of top results printed out
 
+- `minimalAcceptableReturn` - used to calculate Sortino Ratio
+
 - `allocationLimits` - defines allocation combinations for each asset via allocation limits and change step; the key of each asset should be equal to the respective header in the Data file.
 
 Example of the params file:
