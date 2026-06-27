@@ -9,7 +9,7 @@ Node.js installed.
 ## Usage
 
 ```sh
-npm start ./data/<data-file>.json ./data/<params-file>.json <resultsLimit>
+npm start ./data/<data-file>.json ./data/<params-file>.json
 ```
 
 ## Input Files

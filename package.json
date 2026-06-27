@@ -6,6 +6,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsx index",
+    "typecheck": "tsc --noEmit",
     "test": "tsx --test app/domain/*.test.ts app/utils/*.test.ts"
   },
   "engines": {
@@ -23,11 +24,15 @@
   },
   "homepage": "https://github.com/iredchuk/asset-rebalancing#readme",
   "dependencies": {
-    "tsx": "^4.20.5",
-    "typescript": "^5.9.2"
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@types/node": "^22.17.2",
-    "prettier": "^3.6.2"
+    "@types/node": "^22.20.0",
+    "prettier": "^3.9.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true
   }
 }
